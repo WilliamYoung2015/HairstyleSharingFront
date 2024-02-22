@@ -7,4 +7,7 @@
     <string name="splash_button">记录</string>
     <string name="splash_title">风格中心</string>
     <string name="splash_sub_title">保护您的隐私\n面部模糊或打码…</string>
+    <string name="hair_image">Hair image</string>
+    <string name="avatar">User avatar</string>
+    <string name="like_button">Like button</string>
 </resources>

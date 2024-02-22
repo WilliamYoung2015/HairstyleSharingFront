@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sou.hairstyle.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -28,10 +29,23 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val adapter = HairInfoAdapter(emptyList()) // Start with an empty list
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            this.adapter = adapter
         }
+
+        // Observe the LiveData containing the list of hair info items
+        homeViewModel.hairInfoItems.observe(viewLifecycleOwner) { items ->
+            // Update the adapter's data when the observed data changes
+            adapter.items = items
+            adapter.notifyDataSetChanged()
+        }
+
+//        val textView: TextView = binding.textHome
+//        homeViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
         return root
     }
 
