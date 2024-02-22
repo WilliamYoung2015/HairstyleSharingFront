@@ -4,15 +4,45 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sou.hairstyle.network.ApiService
+import com.sou.hairstyle.network.RetrofitClient
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class HairstyleRepository {
+
+    private val apiService: ApiService by lazy {
+        RetrofitClient.instance.create(ApiService::class.java)
+    }
+
+    fun getHairstyles(authToken: String, page: Int, pageSize: Int): Call<List<HairInfoItem>> {
+        return apiService.getHairInfosData(authToken, page, pageSize)
+    }
+}
 
 class HomeViewModel : ViewModel() {
+    private val hairstyleRepository = HairstyleRepository()
 
     private val _hairInfoItems = MutableLiveData<List<HairInfoItem>>()
     val hairInfoItems: LiveData<List<HairInfoItem>> = _hairInfoItems
 
     private val _hasMoreData = MutableLiveData<Boolean>(true)
     val hasMoreData: LiveData<Boolean> = _hasMoreData
+    fun fetchHairstyles(authToken: String, page: Int = 1, pageSize: Int = 20) {
+        hairstyleRepository.getHairstyles(authToken, page, pageSize).enqueue(object : Callback<List<HairInfoItem>> {
+            override fun onResponse(call: Call<List<HairInfoItem>>, response: Response<List<HairInfoItem>>) {
+                if (response.isSuccessful) {
+                    _hairInfoItems.postValue(response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<List<HairInfoItem>>, t: Throwable) {
+                // 处理失败的情况
+            }
+        })
+    }
 
     init {
         loadTestData()
