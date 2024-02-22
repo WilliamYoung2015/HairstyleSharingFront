@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sou.hairstyle.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -33,6 +34,14 @@ class HomeFragment : Fragment() {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             this.adapter = adapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!recyclerView.canScrollVertically(1) && dy > 0) { // Check if scrolling down
+                        homeViewModel.loadMoreData() // Trigger data load
+                    }
+                }
+            })
         }
 
         // Observe the LiveData containing the list of hair info items
