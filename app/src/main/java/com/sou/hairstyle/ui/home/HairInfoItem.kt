@@ -9,3 +9,15 @@ data class HairInfoItem(
     var isLiked: Boolean,
     var likeCount: Int
 )
+
+data class HairInfoResponse(
+    val code: Int,
+    val message: String,
+    val data: DataObject
+)
+
+data class DataObject(
+    val total: Int,
+    // 假设data里还有一个名为items的数组
+    val items: List<HairInfoItem>
+)

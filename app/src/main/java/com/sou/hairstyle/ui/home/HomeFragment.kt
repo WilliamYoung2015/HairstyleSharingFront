@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
             adapter.notifyDataSetChanged()
         }
 
+        homeViewModel.fetchHairstyles("",1,20);
 //        val textView: TextView = binding.textHome
 //        homeViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
