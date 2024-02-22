@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val adapter = HairInfoAdapter(emptyList()) // Start with an empty list
+        val adapter = HairInfoAdapter(emptyList(),false) // Start with an empty list
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             this.adapter = adapter
@@ -42,6 +42,11 @@ class HomeFragment : Fragment() {
                     }
                 }
             })
+        }
+
+        homeViewModel.hasMoreData.observe(viewLifecycleOwner) { hasMore ->
+            adapter.setShowFooter(!hasMore)
+            adapter.notifyDataSetChanged()
         }
 
         // Observe the LiveData containing the list of hair info items

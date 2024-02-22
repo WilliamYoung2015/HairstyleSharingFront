@@ -11,6 +11,9 @@ class HomeViewModel : ViewModel() {
     private val _hairInfoItems = MutableLiveData<List<HairInfoItem>>()
     val hairInfoItems: LiveData<List<HairInfoItem>> = _hairInfoItems
 
+    private val _hasMoreData = MutableLiveData<Boolean>(true)
+    val hasMoreData: LiveData<Boolean> = _hasMoreData
+
     init {
         loadTestData()
     }
@@ -70,11 +73,15 @@ class HomeViewModel : ViewModel() {
     }
 
     fun loadMoreData() {
-        // 假设这是一个异步操作，例如，使用协程来从网络加载数据
         viewModelScope.launch {
             val moreData: List<HairInfoItem> = fetchMoreData() // 异步获取更多数据
-            val currentData: List<HairInfoItem> = _hairInfoItems.value ?: emptyList()
-            _hairInfoItems.postValue(currentData + moreData) // 合并当前数据和新加载的数据
+            if (moreData.isEmpty()) {
+                _hasMoreData.value = false // 没有更多数据可以加载
+            } else {
+                _hasMoreData.value = false
+//                val currentData: List<HairInfoItem> = _hairInfoItems.value ?: emptyList()
+//                _hairInfoItems.postValue(currentData + moreData) // 合并当前数据和新加载的数据
+            }
         }
     }
 
