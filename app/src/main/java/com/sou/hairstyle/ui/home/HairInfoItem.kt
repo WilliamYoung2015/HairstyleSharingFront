@@ -10,14 +10,38 @@ data class HairInfoItem(
     var likeCount: Int
 )
 
+
 data class HairInfoResponse(
     val code: Int,
     val message: String,
-    val data: DataObject
+    val data: Data
 )
 
-data class DataObject(
+data class Data(
     val total: Int,
-    // 假设data里还有一个名为items的数组
-    val items: List<HairInfoItem>
+    val list: List<Hairstyle>
+)
+
+data class Hairstyle(
+    val id: Int,
+    val user_id: Int,
+    val title: String,
+    val desc: String,
+    val tags: String, // 如果tags是以逗号分隔的，可能需要转换为List<String>
+    val star_sum: Int,
+    val comment_count: Int,
+    val favorite_count: Int,
+    val created_at: String,
+    val updated_at: String,
+    val images: List<Image>
+)
+
+data class Image(
+    val id: Int,
+    val user_id: Int,
+    val hairstyle_id: Int,
+    val url: String,
+    val privacy_url: String?,
+    val created_at: String,
+    val updated_at: String
 )
