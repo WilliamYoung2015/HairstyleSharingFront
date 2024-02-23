@@ -12,7 +12,14 @@ import android.view.View
 import android.view.WindowInsets
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import com.sou.hairstyle.databinding.ActivitySplashBinding
+import com.sou.hairstyle.network.HairstyleRepository
+import com.sou.hairstyle.network.Response.TokenResponse
+import com.sou.hairstyle.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -58,5 +65,35 @@ class SplashActivity : AppCompatActivity() {
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         }
+
+        this.fetchToken()
     }
+
+
+    private fun fetchToken() {
+        val hairstyleRepository = HairstyleRepository()
+        val tokenLiveData: MutableLiveData<TokenResponse> = MutableLiveData()
+        println("tokenLiveData start")
+        hairstyleRepository.getToken().enqueue(object : Callback<TokenResponse> {
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                println("tokenLiveData onResponse")
+                if (response.isSuccessful) {
+                    println("tokenLiveData onResponse isSuccessful"+response.body())
+                    tokenLiveData.postValue(response.body())
+                    println(tokenLiveData.value?.code)
+                    println("tokenLiveData:"+ (response.body()?.data?.token ?: "??"))
+                    response.body()?.data?.token?.let { RetrofitClient.saveToken(it) };
+                } else {
+                    // 处理错误情况
+                    println("tokenLiveData onResponse error")
+                }
+            }
+
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                // 处理请求失败的情况，比如网络问题
+                println("tokenLiveData onFailure")
+            }
+        })
+    }
+
 }
