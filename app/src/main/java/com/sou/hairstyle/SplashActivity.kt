@@ -5,18 +5,15 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import com.sou.hairstyle.databinding.ActivitySplashBinding
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.RetrofitClient
+import com.sou.hairstyle.ui.register.RegisterActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,7 +46,17 @@ class SplashActivity : AppCompatActivity() {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        binding.recordButton.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
+        binding.recordButton.setOnClickListener {
+            if (isLoggedIn()) {
+                // 用户已登录，跳转到MainActivity
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                // 用户未登录，跳转到RegisterActivity
+                startActivity(Intent(this, RegisterActivity::class.java))
+            }
+            finish() // 如果你不想用户能够返回到这个SplashActivity
+
+        }
 
         if (Build.VERSION.SDK_INT >= 30) {
             fullscreenContent.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
@@ -69,6 +76,14 @@ class SplashActivity : AppCompatActivity() {
         this.fetchToken()
     }
 
+    private fun isLoggedIn(): Boolean {
+        // 假设您的token存储在SharedPreferences
+//        val sharedPreferences = getSharedPreferences("YourAppPreferences", Context.MODE_PRIVATE)
+//        val token = sharedPreferences.getString("AuthToken", null)
+//        return !token.isNullOrEmpty()
+
+        return false
+    }
 
     private fun fetchToken() {
         val hairstyleRepository = HairstyleRepository()
