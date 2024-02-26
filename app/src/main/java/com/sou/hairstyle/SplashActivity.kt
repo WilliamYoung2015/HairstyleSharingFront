@@ -86,10 +86,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        val hairstyleRepository = HairstyleRepository()
         val tokenLiveData: MutableLiveData<TokenResponse> = MutableLiveData()
         println("tokenLiveData start")
-        hairstyleRepository.getToken().enqueue(object : Callback<TokenResponse> {
+        HairstyleRepository.getToken().enqueue(object : Callback<TokenResponse> {
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 println("tokenLiveData onResponse")
                 if (response.isSuccessful) {

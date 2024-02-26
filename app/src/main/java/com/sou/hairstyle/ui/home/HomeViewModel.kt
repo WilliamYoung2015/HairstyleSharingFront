@@ -14,7 +14,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
-    private val hairstyleRepository = HairstyleRepository()
 
     private val _hairInfoResponse = MutableLiveData<HairInfoResponse>()
 
@@ -26,7 +25,7 @@ class HomeViewModel : ViewModel() {
 
     fun fetchHairstyles(page: Int = 1, pageSize: Int = 20) {
         println("_hairInfoItems start")
-        hairstyleRepository.getHairstyles(page, pageSize).enqueue(object : Callback<HairInfoResponse> {
+        HairstyleRepository.getHairstyles(page, pageSize).enqueue(object : Callback<HairInfoResponse> {
             override fun onResponse(call: Call<HairInfoResponse>, response: Response<HairInfoResponse>) {
                 println("_hairInfoItems code:"+response)
                 if (response.isSuccessful) {

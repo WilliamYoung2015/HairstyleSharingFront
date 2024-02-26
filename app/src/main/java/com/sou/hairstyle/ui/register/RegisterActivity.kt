@@ -6,22 +6,32 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.sou.hairstyle.R
+import com.sou.hairstyle.network.Resource
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var phoneNumberEditText: EditText
+    private lateinit var passwordEditText: EditText
     private lateinit var verificationCodeEditText: EditText
     private lateinit var sendVerificationCodeButton: Button
     private lateinit var registerButton: Button
     private lateinit var existingAccountTextView: TextView
     private lateinit var forgotPasswordTextView: TextView
     private lateinit var countdownTimerView: TextView
+
+    private val viewModel: RegisterViewModel by viewModels()
+    private var smsNo: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register) // Replace with your layout file name
 
         phoneNumberEditText = findViewById(R.id.editTextPhone)
+        passwordEditText = findViewById(R.id.password_input)
         verificationCodeEditText = findViewById(R.id.editTextCode)
         sendVerificationCodeButton = findViewById(R.id.buttonSendCode)
         registerButton = findViewById(R.id.buttonRegister)
@@ -31,12 +41,69 @@ class RegisterActivity : AppCompatActivity() {
         countdownTimerView.visibility = View.GONE // 初始设置为不可见
 
         sendVerificationCodeButton.setOnClickListener {
-            sendVerificationCode()
+            viewModel.sendVerificationCode(phoneNumberEditText.text.toString())
         }
 
         registerButton.setOnClickListener {
-            register()
+            // 检查smsNo是否被初始化
+            smsNo = "11111111"
+            if (smsNo != null) {
+                viewModel.register(
+                    phoneNumberEditText.text.toString(),
+                    smsNo!!,
+                    verificationCodeEditText.text.toString(),
+                    passwordEditText.text.toString()
+                )
+            } else {
+                // 如果smsNo未被初始化，显示错误消息
+                Toast.makeText(this, "请先获取验证码。", Toast.LENGTH_SHORT).show()
+            }
         }
+
+        // 观察验证码发送状态
+        viewModel.smsStatus.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    sendVerificationCodeButton.isEnabled = false
+                    countdownTimerView.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    sendVerificationCodeButton.visibility = View.VISIBLE
+                    countdownTimerView.visibility = View.GONE
+                    sendVerificationCodeButton.isEnabled = true
+                    smsNo = resource.data?.sms_no.toString();
+                    // 可以选择显示某些成功信息
+                }
+                is Resource.Error -> {
+                    sendVerificationCodeButton.visibility = View.VISIBLE
+                    countdownTimerView.visibility = View.GONE
+                    sendVerificationCodeButton.isEnabled = true
+                    // 显示错误信息
+                    Toast.makeText(this, resource.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+
+        // 观察注册状态
+        viewModel.registrationStatus.observe(this, Observer { resource ->
+            println("registrationStatus observer")
+            println(resource)
+
+            when (resource) {
+                is Resource.Success -> {
+                    // 处理注册成功的情况
+
+                }
+                is Resource.Error -> {
+                    // 处理注册失败的情况
+                    Toast.makeText(this, resource.message, Toast.LENGTH_LONG).show()
+                }
+                is Resource.Loading -> {
+                    // 显示加载状态
+                }
+            }
+        })
 
         existingAccountTextView.setOnClickListener {
             navigateToLogin()
@@ -45,46 +112,20 @@ class RegisterActivity : AppCompatActivity() {
         forgotPasswordTextView.setOnClickListener {
             navigateToResetPassword()
         }
+
+        setupCountdownTimer()
     }
 
-    private fun sendVerificationCode() {
-        val phoneNumber = phoneNumberEditText.text.toString()
-        if (phoneNumber.isNotEmpty()) {
-            // Start countdown timer for the verification button
-            object : CountDownTimer(60000, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    sendVerificationCodeButton.visibility = View.GONE // 隐藏发送按钮
-                    countdownTimerView.visibility = View.VISIBLE // 显示倒计时
-                    countdownTimerView.text = "重新发送 (${millisUntilFinished / 1000}s)"
-                }
-
-                override fun onFinish() {
-                    countdownTimerView.visibility = View.GONE // 隐藏倒计时
-                    sendVerificationCodeButton.visibility = View.VISIBLE // 显示发送按钮
-                    sendVerificationCodeButton.isEnabled = true
-                    sendVerificationCodeButton.text = "发送验证码"
-                }
-            }.start()
-        } else {
-            // Show error or request focus for the phone number input
-            phoneNumberEditText.error = "请输入手机号码"
-            phoneNumberEditText.requestFocus()
-        }
-    }
-
-    private fun register() {
-        // TODO: Add logic for registration with the verification code
-        val phoneNumber = phoneNumberEditText.text.toString()
-        val verificationCode = verificationCodeEditText.text.toString()
-        if (phoneNumber.isNotEmpty() && verificationCode.isNotEmpty()) {
-            // Logic to verify the code and register the user
-        } else {
-            // Handle the case where either or both fields are empty
-            if (phoneNumber.isEmpty()) {
-                phoneNumberEditText.error = "手机号码不能为空"
-            }
-            if (verificationCode.isEmpty()) {
-                verificationCodeEditText.error = "验证码不能为空"
+    private fun setupCountdownTimer() {
+        viewModel.countdownTime.observe(this) { secondsRemaining ->
+            if (secondsRemaining > 0) {
+                countdownTimerView.visibility = View.VISIBLE
+                countdownTimerView.text = getString(R.string.resend_code_timer, secondsRemaining)
+                sendVerificationCodeButton.isEnabled = false
+            } else {
+                countdownTimerView.visibility = View.GONE
+                sendVerificationCodeButton.visibility = View.VISIBLE
+                sendVerificationCodeButton.isEnabled = true
             }
         }
     }

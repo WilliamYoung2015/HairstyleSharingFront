@@ -18,4 +18,5 @@
     <string name="third_input_hint">请输入第三个字段</string>
     <string name="submit_button_text">提交注册</string>
     <string name="cancel_button_text">取消</string>
+    <string name="resend_code_timer">重新发送 (%1$d)</string>
 </resources>
