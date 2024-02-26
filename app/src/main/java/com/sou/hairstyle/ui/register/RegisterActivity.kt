@@ -1,5 +1,6 @@
 package com.sou.hairstyle.ui.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -10,8 +11,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.sou.hairstyle.MainActivity
 import com.sou.hairstyle.R
 import com.sou.hairstyle.network.Resource
+import com.sou.hairstyle.ui.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var phoneNumberEditText: EditText
@@ -132,6 +135,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun navigateToLogin() {
         // TODO: Navigate to the login activity
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish() // 关闭当前活动
     }
 
     private fun navigateToResetPassword() {

@@ -13,6 +13,7 @@ import com.sou.hairstyle.databinding.ActivitySplashBinding
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.RetrofitClient
+import com.sou.hairstyle.ui.login.LoginActivity
 import com.sou.hairstyle.ui.register.RegisterActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,7 +53,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
                 // 用户未登录，跳转到RegisterActivity
-                startActivity(Intent(this, RegisterActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
             }
             finish() // 如果你不想用户能够返回到这个SplashActivity
 

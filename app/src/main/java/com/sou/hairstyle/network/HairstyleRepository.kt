@@ -1,7 +1,9 @@
 package com.sou.hairstyle.network
 
+import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
+import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
@@ -36,5 +38,14 @@ object HairstyleRepository {
     ): Call<RegisterResponse> {
         val registerRequest = RegisterRequest(phone, smsNo, smsCode, password)
         return apiService.registerUser(registerRequest)
+    }
+
+    fun loginUser(
+        phone: String,
+        password: String,
+    )
+    :Call<LoginResponse> {
+        val loginRequest = LoginRequest(phone = phone, password = password)
+        return apiService.loginUser(loginRequest)
     }
 }
