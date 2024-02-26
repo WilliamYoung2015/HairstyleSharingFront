@@ -21,6 +21,7 @@
     <string name="register">注册</string>
     <string name="phone_number">手机号</string>
     <string name="password">密码</string>
+    <string name="new_password">新密码</string>
     <string name="submit_button_text">提交</string>
     <string name="verification_code">验证码</string>
     <string name="send_verification_code">发送验证码</string>
@@ -29,4 +30,6 @@
     <string name="enter_password">请输入密码</string>
     <string name="already_have_account">已有账户？</string>
     <string name="forgot_password">忘记密码</string>
+    <string name="reset_password">重置密码</string>
+    <string name="enter_new_password">请输入新密码</string>
 </resources>
