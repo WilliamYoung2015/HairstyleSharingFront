@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_phone_number"
-            android:drawableEnd="@android:drawable/ic_dialog_dialer"
+            android:drawableEnd="@android:drawable/stat_sys_phone_call"
             android:drawablePadding="10dp"
             android:padding="12dp"
             android:background="@drawable/edit_text_background"

@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.sou.hairstyle.R
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.ui.register.RegisterActivity
+import com.sou.hairstyle.ui.resetpassword.ResetPasswordActivity
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels()
@@ -51,6 +52,7 @@ class LoginActivity : AppCompatActivity() {
 
         forgotPasswordTextView.setOnClickListener {
             // Handle forgot password click
+            startActivity(Intent(this, ResetPasswordActivity::class.java))
         }
 
         createAccountTextView.setOnClickListener {

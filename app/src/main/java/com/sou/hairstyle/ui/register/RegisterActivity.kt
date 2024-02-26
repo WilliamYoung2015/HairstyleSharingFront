@@ -15,6 +15,7 @@ import com.sou.hairstyle.MainActivity
 import com.sou.hairstyle.R
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.ui.login.LoginActivity
+import com.sou.hairstyle.ui.resetpassword.ResetPasswordActivity
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var phoneNumberEditText: EditText
@@ -39,7 +40,7 @@ class RegisterActivity : AppCompatActivity() {
         sendVerificationCodeButton = findViewById(R.id.buttonSendCode)
         registerButton = findViewById(R.id.buttonRegister)
         existingAccountTextView = findViewById(R.id.textViewExistingAccount)
-        forgotPasswordTextView = findViewById(R.id.textViewForgotPassword)
+//        forgotPasswordTextView = findViewById(R.id.textViewForgotPassword)
         countdownTimerView = findViewById(R.id.textViewCountdown) // 初始化您的倒计时TextView
         countdownTimerView.visibility = View.GONE // 初始设置为不可见
 
@@ -141,5 +142,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun navigateToResetPassword() {
         // TODO: Navigate to the reset password activity
+        startActivity(Intent(this, ResetPasswordActivity::class.java))
     }
 }

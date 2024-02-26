@@ -1,6 +1,7 @@
 package com.sou.hairstyle.ui.resetpassword
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -26,6 +27,8 @@ class ResetPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_password) // Replace with your layout file name
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(android.R.drawable.stat_sys_phone_call) // 示例系统图标
 
         phoneNumberEditText = findViewById(R.id.editTextPhone)
         passwordEditText = findViewById(R.id.password_input)
@@ -101,6 +104,17 @@ class ResetPasswordActivity : AppCompatActivity() {
         })
 
         setupCountdownTimer()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                // 当点击返回按钮时，结束当前活动
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setupCountdownTimer() {
