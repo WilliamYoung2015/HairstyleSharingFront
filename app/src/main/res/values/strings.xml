@@ -10,4 +10,13 @@
     <string name="hair_image">Hair image</string>
     <string name="avatar">User avatar</string>
     <string name="like_button">Like button</string>
+    <string name="character_image_description">Character image</string>
+    <string name="style_center">风格中心</string>
+    <string name="register">注册</string>
+    <string name="first_input_hint">请输入第一个字段</string>
+    <string name="second_input_hint">请输入第二个字段</string>
+    <string name="third_input_hint">请输入第三个字段</string>
+    <string name="submit_button_text">提交注册</string>
+    <string name="cancel_button_text">取消</string>
+    <string name="resend_code_timer">重新发送 (%1$d)</string>
 </resources>
