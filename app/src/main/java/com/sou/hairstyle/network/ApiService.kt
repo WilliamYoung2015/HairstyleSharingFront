@@ -1,8 +1,12 @@
 package com.sou.hairstyle.network
 
+import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
+import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
+import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
+import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.ui.home.HairInfoResponse
@@ -29,4 +33,14 @@ interface ApiService {
     fun registerUser(
         @Body registerRequest: RegisterRequest
     ): Call<RegisterResponse>
+
+    @POST("user/login")
+    fun loginUser(
+        @Body loginRequest: LoginRequest
+    ): Call<LoginResponse>
+
+    @POST("user/resetPassword")
+    fun resetPassword(
+        @Body resetPasswordRequest: ResetPasswordRequest
+    ): Call<ResetPasswordResponse>
 }

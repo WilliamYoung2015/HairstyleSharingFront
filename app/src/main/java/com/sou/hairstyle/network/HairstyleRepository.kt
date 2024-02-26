@@ -1,8 +1,12 @@
 package com.sou.hairstyle.network
 
+import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
+import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
+import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
+import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.ui.home.HairInfoItem
@@ -36,5 +40,24 @@ object HairstyleRepository {
     ): Call<RegisterResponse> {
         val registerRequest = RegisterRequest(phone, smsNo, smsCode, password)
         return apiService.registerUser(registerRequest)
+    }
+
+    fun loginUser(
+        phone: String,
+        password: String,
+    )
+    :Call<LoginResponse> {
+        val loginRequest = LoginRequest(phone = phone, password = password)
+        return apiService.loginUser(loginRequest)
+    }
+
+    fun resetPassword(
+        phone: String,
+        smsNo: String,
+        smsCode: String,
+        password: String,
+    ): Call<ResetPasswordResponse> {
+        val resetPasswordRequest = ResetPasswordRequest(phone, smsNo, smsCode, password)
+        return apiService.resetPassword(resetPasswordRequest)
     }
 }
