@@ -24,7 +24,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var sendVerificationCodeButton: Button
     private lateinit var registerButton: Button
     private lateinit var existingAccountTextView: TextView
-    private lateinit var forgotPasswordTextView: TextView
+//    private lateinit var forgotPasswordTextView: TextView
     private lateinit var countdownTimerView: TextView
 
     private val viewModel: RegisterViewModel by viewModels()
@@ -50,7 +50,8 @@ class RegisterActivity : AppCompatActivity() {
 
         registerButton.setOnClickListener {
             // 检查smsNo是否被初始化
-            smsNo = "11111111"
+//            smsNo = "11111111"
+
             if (smsNo != null) {
                 viewModel.register(
                     phoneNumberEditText.text.toString(),
@@ -66,16 +67,20 @@ class RegisterActivity : AppCompatActivity() {
 
         // 观察验证码发送状态
         viewModel.smsStatus.observe(this) { resource ->
+            println("viewModel.smsStatus1111111111")
+            println(resource)
             when (resource) {
                 is Resource.Loading -> {
                     sendVerificationCodeButton.isEnabled = false
                     countdownTimerView.visibility = View.VISIBLE
                 }
                 is Resource.Success -> {
+
+                    println(resource.data)
                     sendVerificationCodeButton.visibility = View.VISIBLE
                     countdownTimerView.visibility = View.GONE
                     sendVerificationCodeButton.isEnabled = true
-                    smsNo = resource.data?.sms_no.toString();
+                    smsNo = resource.data?.data?.sms_no.toString();
                     // 可以选择显示某些成功信息
                 }
                 is Resource.Error -> {
@@ -97,7 +102,8 @@ class RegisterActivity : AppCompatActivity() {
             when (resource) {
                 is Resource.Success -> {
                     // 处理注册成功的情况
-
+                    Toast.makeText(this, "注册新用户成功", Toast.LENGTH_SHORT).show()
+                    navigateToLogin()
                 }
                 is Resource.Error -> {
                     // 处理注册失败的情况
@@ -113,9 +119,9 @@ class RegisterActivity : AppCompatActivity() {
             navigateToLogin()
         }
 
-        forgotPasswordTextView.setOnClickListener {
-            navigateToResetPassword()
-        }
+//        forgotPasswordTextView.setOnClickListener {
+//            navigateToResetPassword()
+//        }
 
         setupCountdownTimer()
     }

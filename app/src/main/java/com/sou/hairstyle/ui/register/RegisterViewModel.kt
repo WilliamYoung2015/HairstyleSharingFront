@@ -34,10 +34,16 @@ class RegisterViewModel : ViewModel() {
                         call: Call<SmsCodeResponse>,
                         response: retrofit2.Response<SmsCodeResponse>
                     ) {
+                        println("sendSmsCode 111111")
                         if (response.isSuccessful && response.body() != null) {
+                            println("sendSmsCode 222222")
+                            println(response.body())
                             if(response.body()?.code != 1){
+                                println("sendSmsCode 33333")
                                 _smsStatus.postValue(Resource.Error("Error: ${response.body()?.code} ${response.body()?.message}"))
                             }else {
+                                println("sendSmsCode 4444444")
+                                println(response.body())
                                 _smsStatus.postValue(Resource.Success(response.body()!!)) // 使用postValue，因为这可能在非主线程调用
                             }
                         }

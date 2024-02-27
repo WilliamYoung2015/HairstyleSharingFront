@@ -9,12 +9,12 @@ import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
+import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivitySplashBinding
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.RetrofitClient
 import com.sou.hairstyle.ui.login.LoginActivity
-import com.sou.hairstyle.ui.register.RegisterActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +35,8 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -48,10 +50,19 @@ class SplashActivity : AppCompatActivity() {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         binding.recordButton.setOnClickListener {
-            if (isLoggedIn()) {
+            val sharedPreferencesManager = SharedPreferencesManager.getInstance(applicationContext)
+//            sharedPreferencesManager.clearUser()//清理用户数据测试
+            println("sharedPreferencesManager user info:")
+            println(sharedPreferencesManager.getUser())
+            if (sharedPreferencesManager.isLoggedIn()) {
+                // 用户已登录，可以获取用户信息ß
+                val user = sharedPreferencesManager.getUser()
+                // 处理已登录的逻辑
                 // 用户已登录，跳转到MainActivity
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
+                // 用户未登录
+                // 处理未登录的逻辑
                 // 用户未登录，跳转到RegisterActivity
                 startActivity(Intent(this, LoginActivity::class.java))
             }
@@ -75,15 +86,6 @@ class SplashActivity : AppCompatActivity() {
         }
 
         this.fetchToken()
-    }
-
-    private fun isLoggedIn(): Boolean {
-        // 假设您的token存储在SharedPreferences
-//        val sharedPreferences = getSharedPreferences("YourAppPreferences", Context.MODE_PRIVATE)
-//        val token = sharedPreferences.getString("AuthToken", null)
-//        return !token.isNullOrEmpty()
-
-        return false
     }
 
     private fun fetchToken() {
