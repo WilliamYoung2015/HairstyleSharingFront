@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/characterImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:src="@drawable/character_image"
+        android:contentDescription="@string/character_image_description"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <TextView
+        android:id="@+id/styleCenterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_phone_number"
+            android:drawableEnd="@android:drawable/stat_sys_phone_call"
+            android:drawablePadding="10dp"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:inputType="phone"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/white"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+
+            app:hintTextColor="@color/white">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_password"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center_vertical"
+            android:maxLines="1"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
+
+
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/verification_code"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="0dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/editTextCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/frameLayoutVerification"
+                android:layout_alignParentStart="true"
+                android:hint="@string/enter_verification_code"
+                android:padding="12dp"
+                android:background="@drawable/edit_code_background"
+                android:inputType="numberDecimal"
+                android:textColor="@color/white"
+                android:textColorHint="@color/light_gray"
+                android:gravity="center_vertical"/>
+
+            <FrameLayout
+                android:id="@+id/frameLayoutVerification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp">
+
+                <Button
+                    android:id="@+id/buttonSendCode"
+                    android:layout_width="104dp"
+                    android:layout_height="48dp"
+                    android:text="@string/send_verification_code"
+                    android:background="@drawable/send_code_button_bg"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"/>
+
+                <TextView
+                    android:id="@+id/textViewCountdown"
+                    android:layout_width="104dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/send_code_button_bg"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    android:visibility="visible"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_button_radius"
+        android:text="@string/submit_button_text"
+        android:backgroundTint="@color/green"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/textViewExistingAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/already_have_account"
+            android:textColor="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:background="?attr/selectableItemBackground" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/textViewForgotPassword"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/forgot_password"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:padding="8dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:textSize="16sp"-->
+<!--            android:background="?attr/selectableItemBackground" />-->
+
+    </LinearLayout>
+
+</LinearLayout>
