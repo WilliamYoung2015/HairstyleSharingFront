@@ -9,7 +9,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.sou.hairstyle.MainActivity
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.ui.register.RegisterActivity
 import com.sou.hairstyle.ui.resetpassword.ResetPasswordActivity
@@ -41,7 +43,10 @@ class LoginActivity : AppCompatActivity() {
                 }
                 is Resource.Success -> {
                     // Handle successful login
-                    Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
+                    val sharedPreferencesManager = SharedPreferencesManager.getInstance(this)
+                    resource.data?.data?.user?.let { sharedPreferencesManager.saveUser(it) }
+                    startActivity(Intent(this, MainActivity::class.java))
                     // Navigate to next screen
                 }
                 is Resource.Error -> {
