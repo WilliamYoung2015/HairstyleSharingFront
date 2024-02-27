@@ -39,7 +39,7 @@ interface ApiService {
         @Body loginRequest: LoginRequest
     ): Call<LoginResponse>
 
-    @POST("user/resetPassword")
+    @POST("user/reset_password")
     fun resetPassword(
         @Body resetPasswordRequest: ResetPasswordRequest
     ): Call<ResetPasswordResponse>

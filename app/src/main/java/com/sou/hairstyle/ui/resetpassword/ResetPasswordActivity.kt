@@ -1,5 +1,6 @@
 package com.sou.hairstyle.ui.resetpassword
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -10,7 +11,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.sou.hairstyle.MainActivity
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.network.Resource
 
 class ResetPasswordActivity : AppCompatActivity() {
@@ -28,7 +31,7 @@ class ResetPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_password) // Replace with your layout file name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(android.R.drawable.stat_sys_phone_call) // 示例系统图标
+//        supportActionBar?.setHomeAsUpIndicator(android.R.drawable.stat_sys_phone_call) // 示例系统图标
 
         phoneNumberEditText = findViewById(R.id.editTextPhone)
         passwordEditText = findViewById(R.id.password_input)
@@ -44,7 +47,6 @@ class ResetPasswordActivity : AppCompatActivity() {
 
         resetPasswordButton.setOnClickListener {
             // 检查smsNo是否被初始化
-            smsNo = "11111111"
             if (smsNo != null) {
                 viewModel.resetPassowrd(
                     phoneNumberEditText.text.toString(),
@@ -69,7 +71,7 @@ class ResetPasswordActivity : AppCompatActivity() {
                     sendVerificationCodeButton.visibility = View.VISIBLE
                     countdownTimerView.visibility = View.GONE
                     sendVerificationCodeButton.isEnabled = true
-                    smsNo = resource.data?.sms_no.toString();
+                    smsNo = resource.data?.data?.sms_no.toString();
                     // 可以选择显示某些成功信息
                 }
                 is Resource.Error -> {
@@ -91,7 +93,8 @@ class ResetPasswordActivity : AppCompatActivity() {
             when (resource) {
                 is Resource.Success -> {
                     // 处理重置密码成功的情况
-
+                    Toast.makeText(this, "重置密码成功", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
                 is Resource.Error -> {
                     // 处理重置密码失败的情况
