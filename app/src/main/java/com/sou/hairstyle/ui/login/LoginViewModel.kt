@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sou.hairstyle.common.UserSessionManager
 import com.sou.hairstyle.network.HairstyleRepository
-import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.network.Response.LoginResponse
 import kotlinx.coroutines.launch

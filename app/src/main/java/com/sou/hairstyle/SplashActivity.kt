@@ -10,7 +10,6 @@ import android.view.WindowInsets
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import com.sou.hairstyle.common.SharedPreferencesManager
-import com.sou.hairstyle.common.UserSessionManager
 import com.sou.hairstyle.databinding.ActivitySplashBinding
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Response.TokenResponse
@@ -57,7 +56,7 @@ class SplashActivity : AppCompatActivity() {
             println(sharedPreferencesManager.getUser())
             if (sharedPreferencesManager.isLoggedIn()) {
                 // 用户已登录，可以获取用户信息ß
-                val user = UserSessionManager.getUser()
+                val user = sharedPreferencesManager.getUser()
                 // 处理已登录的逻辑
                 // 用户已登录，跳转到MainActivity
                 startActivity(Intent(this, MainActivity::class.java))
