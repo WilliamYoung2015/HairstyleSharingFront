@@ -8,17 +8,17 @@ data class RegisterResponse(
 
 data class User(
     val id: Int,
-    val nickname: String,
-    val username: String,
-    val email: String,
-    val phone: String,
-    val gender: String,
-    val age: Int,
-    val address: String,
-    val my_style: String,
-    val avatar: String,
-    val last_login: String,
-    val created_at: String,
-    val updated_at: String
+    val nickname: String?=null,
+    val username: String?=null,
+    val email: String?=null,
+    val phone: String?=null,
+    val gender: String?=null,
+    val age: Int?=null,
+    val address: String?=null,
+    val my_style: String?=null,
+    val avatar: String?=null,
+    val last_login: String?=null,
+    val created_at: String?=null,
+    val updated_at: String?=null,
     // 如果还有其他用户相关数据，请根据实际情况添加属性
 )

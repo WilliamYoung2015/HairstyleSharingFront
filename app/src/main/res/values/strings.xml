@@ -14,6 +14,7 @@
     <string name="cancel_button_text">取消</string>
     <string name="resend_code_timer">重新发送 (%1$d)</string>
     <string name="login">登录</string>
+    <string name="logout">登出</string>
     <string name="username">用户名</string>
     <string name="login_button">登录</string>
     <string name="create_account">创建账户</string>
@@ -32,4 +33,18 @@
     <string name="forgot_password">忘记密码</string>
     <string name="reset_password">重置密码</string>
     <string name="enter_new_password">请输入新密码</string>
+    <string name="user_avatar">用户头像</string>
+    <string name="nickname">昵称</string>
+    <string name="gender">性别</string>
+    <string name="age">年龄</string>
+    <string name="address">地址</string>
+    <string name="style">风格</string>
+    <string name="edit_info">编辑信息</string>
+    <string name="settings">设置</string>
+    <string name="back_button">返回</string>
+    <string name="save">保存</string>
+    <string name="input_nickname">请输入昵称</string>
+    <string name="input_gender">请输入性别</string>
+    <string name="input_address">请输入地址</string>
+    <string name="input_style">请输入风格</string>
 </resources>

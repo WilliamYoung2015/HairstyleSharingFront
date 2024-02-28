@@ -85,10 +85,21 @@ class SplashActivity : AppCompatActivity() {
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         }
 
-        this.fetchToken()
+
+
+// To retrieve a token
+        val token = SharedPreferencesManager.getInstance(this).getToken()
+        if(token.isNullOrEmpty()){
+            this.fetchToken()
+        }else
+        {
+            RetrofitClient.saveToken(token)
+        }
+
     }
 
     private fun fetchToken() {
+        val _context = this;
         val tokenLiveData: MutableLiveData<TokenResponse> = MutableLiveData()
         println("tokenLiveData start")
         HairstyleRepository.getToken().enqueue(object : Callback<TokenResponse> {
@@ -99,7 +110,10 @@ class SplashActivity : AppCompatActivity() {
                     tokenLiveData.postValue(response.body())
                     println(tokenLiveData.value?.code)
                     println("tokenLiveData:"+ (response.body()?.data?.token ?: "??"))
-                    response.body()?.data?.token?.let { RetrofitClient.saveToken(it) };
+                    response.body()?.data?.token?.let {
+                        RetrofitClient.saveToken(it)
+                        SharedPreferencesManager.getInstance(_context).saveToken(it)
+                    };
                 } else {
                     // 处理错误情况
                     println("tokenLiveData onResponse error")
