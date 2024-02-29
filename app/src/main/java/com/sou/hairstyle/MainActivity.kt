@@ -1,14 +1,18 @@
 package com.sou.hairstyle
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sou.hairstyle.databinding.ActivityMainBinding
+import com.sou.hairstyle.ui.release.AddHairStyleActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +39,12 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        navView.setOnItemSelectedListener {
+            if (it.itemId == R.id.navigation_dashboard) {
+                startActivity(Intent(this, AddHairStyleActivity::class.java))
+            }
+            return@setOnItemSelectedListener true
+        }
         supportActionBar?.hide()
     }
 }
