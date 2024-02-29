@@ -4,17 +4,20 @@ import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
+import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
+import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoResponse
 import retrofit2.http.GET
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface ApiService {
@@ -43,4 +46,9 @@ interface ApiService {
     fun resetPassword(
         @Body resetPasswordRequest: ResetPasswordRequest
     ): Call<ResetPasswordResponse>
+
+    @PUT("user")
+    fun updateUser(
+        @Body updateUserRequest: UpdateUserRequest
+    ): Call<UserUpdateResponse>
 }

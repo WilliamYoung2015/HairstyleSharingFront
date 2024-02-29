@@ -1,6 +1,7 @@
 package com.sou.hairstyle
 
 import android.os.Bundle
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
@@ -8,11 +9,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivityMainBinding
+import com.sou.hairstyle.ui.userInfo.UserInfoFragment
 
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), UserInfoFragment.FragmentUserInfoListener {
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferencesManager = SharedPreferencesManager.getInstance(this)
 
         val navView: BottomNavigationView = binding.navView
 
@@ -36,5 +40,12 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         supportActionBar?.hide()
+    }
+
+    override fun navigateToActivityAndFinish(intent: Intent) {
+        sharedPreferencesManager.clearUser()
+        sharedPreferencesManager.clearToken()
+        startActivity(intent)
+        finish()
     }
 }
