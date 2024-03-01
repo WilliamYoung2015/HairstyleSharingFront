@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sou.hairstyle.network.ApiService
 import com.sou.hairstyle.network.HairstyleRepository
-import com.sou.hairstyle.network.Response.TokenResponse
-import com.sou.hairstyle.network.RetrofitClient
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,9 +39,14 @@ class HomeViewModel : ViewModel() {
     }
 
     init {
-        loadTestData()
+        initData()
 
     }
+
+    fun initData(){
+        loadTestData()
+    }
+
 
     suspend fun fetchMoreData(): List<HairInfoItem> {
         // 这里是模拟从数据源获取数据的逻辑
@@ -57,7 +59,7 @@ class HomeViewModel : ViewModel() {
                 title = "Elegant Bob Cut",
                 description = "This bob cut is sleek and elegant, perfect for a modern look.",
                 isLiked = false,
-                likeCount = 123
+                star_sum = 123
             ),
             HairInfoItem(
                 id = "7",
@@ -66,7 +68,7 @@ class HomeViewModel : ViewModel() {
                 title = "Curly Beauty",
                 description = "Embrace your curls with this beautiful and bouncy hairstyle.",
                 isLiked = false,
-                likeCount = 456
+                star_sum = 456
             ),
             HairInfoItem(
                 id = "8",
@@ -75,7 +77,7 @@ class HomeViewModel : ViewModel() {
                 title = "Straight and Chic",
                 description = "A straight hairstyle that is both chic and easy to maintain.",
                 isLiked = false,
-                likeCount = 789
+                star_sum = 789
             )
             ,
             HairInfoItem(
@@ -85,7 +87,7 @@ class HomeViewModel : ViewModel() {
                 title = "Straight and Chic",
                 description = "A straight hairstyle that is both chic and easy to maintain.",
                 isLiked = false,
-                likeCount = 789
+                star_sum = 789
             )
             ,
             HairInfoItem(
@@ -95,7 +97,7 @@ class HomeViewModel : ViewModel() {
                 title = "Straight and Chic",
                 description = "A straight hairstyle that is both chic and easy to maintain.",
                 isLiked = false,
-                likeCount = 789
+                star_sum = 789
             )
         )
     }
@@ -122,7 +124,7 @@ class HomeViewModel : ViewModel() {
                 title = item.title,
                 description = item.desc,
                 isLiked = false, // You need to determine this based on your logic
-                likeCount = item.star_sum
+                star_sum = item.star_sum
             )
         }
     }
@@ -136,7 +138,7 @@ class HomeViewModel : ViewModel() {
                 title = item.title,
                 desc = item.description,
                 tags = "", // Placeholder since HairInfoItem doesn't have this
-                star_sum = item.likeCount,
+                star_sum = item.star_sum!!,
                 comment_count = 0, // Placeholder since HairInfoItem doesn't have this
                 favorite_count = 0, // Placeholder since HairInfoItem doesn't have this
                 created_at = "", // Placeholder since HairInfoItem doesn't have this
@@ -157,6 +159,7 @@ class HomeViewModel : ViewModel() {
     }
 
 
+
     private fun loadTestData() {
         val testData = listOf(
             HairInfoItem(
@@ -166,7 +169,7 @@ class HomeViewModel : ViewModel() {
                 title = "Elegant Bob Cut",
                 description = "This bob cut is sleek and elegant, perfect for a modern look.",
                 isLiked = false,
-                likeCount = 123
+                star_sum = 123
             ),
             HairInfoItem(
                 id = "2",
@@ -175,7 +178,7 @@ class HomeViewModel : ViewModel() {
                 title = "Curly Beauty",
                 description = "Embrace your curls with this beautiful and bouncy hairstyle.",
                 isLiked = false,
-                likeCount = 456
+                star_sum = 456
             ),
             HairInfoItem(
                 id = "3",
@@ -184,7 +187,7 @@ class HomeViewModel : ViewModel() {
                 title = "Straight and Chic",
                 description = "A straight hairstyle that is both chic and easy to maintain.",
                 isLiked = false,
-                likeCount = 789
+                star_sum = 789
             )
             ,
             HairInfoItem(
@@ -194,7 +197,7 @@ class HomeViewModel : ViewModel() {
                 title = "Straight and Chic",
                 description = "A straight hairstyle that is both chic and easy to maintain.",
                 isLiked = false,
-                likeCount = 789
+                star_sum = 789
             )
             ,
             HairInfoItem(
@@ -204,7 +207,7 @@ class HomeViewModel : ViewModel() {
                 title = "Straight and Chic",
                 description = "A straight hairstyle that is both chic and easy to maintain.",
                 isLiked = false,
-                likeCount = 789
+                star_sum = 789
             )
         )
 

@@ -47,6 +47,7 @@
         <activity
             android:name=".ui.setting.SettingActivity"
             android:exported="true"/>
+
         <activity android:name=".ui.release.AddHairStyleActivity"/>
 
         <activity
@@ -57,6 +58,9 @@
             android:name=".imaging.IMGEditActivity"
             android:theme="@style/ImageEditTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".ui.hairstyleInfo.HairstyleInfoActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -7,7 +7,9 @@ data class HairInfoItem(
     val title: String,
     val description: String,
     var isLiked: Boolean,
-    var likeCount: Int
+    var star_sum: Int=0,
+    var comment_count: Int=0,
+    var favorite_count:Int=0,
 )
 
 

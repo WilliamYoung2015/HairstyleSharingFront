@@ -9,12 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sou.hairstyle.R
 
-class HairInfoAdapter(var items: List<HairInfoItem>, private var showFooter: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HairInfoAdapter(var items: List<HairInfoItem>,
+                      private var showFooter: Boolean,
+                      private val onItemClicked: (HairInfoItem) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_ITEM = 0
     private val VIEW_TYPE_FOOTER = 1
 
-    class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ItemViewHolder(view: View, clickAtPosition: (Int) -> Unit) : RecyclerView.ViewHolder(view) {
+        init {
+            view.setOnClickListener { clickAtPosition(adapterPosition) }
+        }
         val imageView: ImageView = view.findViewById(R.id.item_image)
         val avatarView: ImageView = view.findViewById(R.id.item_avatar)
         val titleView: TextView = view.findViewById(R.id.item_title)
@@ -28,7 +34,11 @@ class HairInfoAdapter(var items: List<HairInfoItem>, private var showFooter: Boo
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_ITEM) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_hair_info, parent, false)
-            return ItemViewHolder(view)
+//            return ItemViewHolder(view)
+            return ItemViewHolder(view) { position ->
+                val item = items[position]
+                onItemClicked(item)
+            }
         } else { // VIEW_TYPE_FOOTER
             val view = LayoutInflater.from(parent.context).inflate(R.layout.footer_view, parent, false)
             return FooterViewHolder(view)
@@ -55,7 +65,7 @@ class HairInfoAdapter(var items: List<HairInfoItem>, private var showFooter: Boo
 
             holder.titleView.text = item.title
             holder.descriptionView.text = item.description
-            holder.likeCountView.text = item.likeCount.toString()
+            holder.likeCountView.text = item.star_sum.toString()
             holder.likeButton.setImageResource(if (item.isLiked) android.R.drawable.star_big_on else android.R.drawable.star_big_off)
 
 
@@ -63,14 +73,16 @@ class HairInfoAdapter(var items: List<HairInfoItem>, private var showFooter: Boo
             holder.likeButton.setOnClickListener {
                 // Update the isLiked status
                 item.isLiked = !item.isLiked
-                item.likeCount += if (item.isLiked) 1 else -1
+                item.star_sum += if (item.isLiked) 1 else -1
                 notifyItemChanged(position)
             }
 
             // You might want to add a click listener to the whole item view as well
-            holder.itemView.setOnClickListener {
-                // Implement your click handling logic
-            }
+//            holder.itemView.setOnClickListener {
+//                // Implement your click handling logic
+//                val intent = Intent(activity, HairstyleInfoActivity::class.java)
+//                startActivity(intent)
+//            }
         }
     }
 
