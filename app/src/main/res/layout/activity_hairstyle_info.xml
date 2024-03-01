@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:background="@color/black">
+
+    <!-- Square Image at the top -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/imgLargeParent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:cardUseCompatPadding="true">
+
+    <ImageView
+        android:id="@+id/imgLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:maxHeight="300dp"
+        android:src="@drawable/character_image"
+        android:background="@android:color/transparent" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Rounded bar for profile images and comment count -->
+    <LinearLayout
+        android:id="@+id/profileImagesBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/imgLargeParent"
+        android:background="@drawable/rounded_bar"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="-50dp">
+
+        <!-- Comment count -->
+        <TextView
+            android:id="@+id/txtCommentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2条评论"
+            android:textColor="@color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Like counter and icon -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end">
+
+            <!-- Like count -->
+            <TextView
+                android:id="@+id/txtLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3456"
+                android:textColor="@color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginEnd="4dp" />
+
+            <!-- Heart icon -->
+            <ImageView
+                android:id="@+id/imgHeart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/heart_solid"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!-- 评论列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewComments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profileImagesBar"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"/>
+
+    <!-- 添加评论按钮 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonAddComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="添加评论"
+        android:textColor="@color/white"
+        android:background="@drawable/button_red_rounded"
+        android:layout_marginBottom="16dp"
+        android:drawablePadding="10dp"
+        android:elevation="4dp"/>
+</RelativeLayout>

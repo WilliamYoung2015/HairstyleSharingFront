@@ -47,4 +47,6 @@
     <string name="input_gender">请输入性别</string>
     <string name="input_address">请输入地址</string>
     <string name="input_style">请输入风格</string>
+    <string name="comment_count_format">%1$d条评论</string>
+    <string name="hair_style_detail">发型详情</string>
 </resources>
