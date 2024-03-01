@@ -4,11 +4,13 @@ import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
+import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
+import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoItem
 import com.sou.hairstyle.ui.home.HairInfoResponse
 import retrofit2.Call
@@ -27,9 +29,9 @@ object HairstyleRepository {
         return apiService.getToken()
     }
 
-    fun sendSmsCode(phone:String):Call<SmsCodeResponse>{
+    fun sendSmsCode(phone: String): Call<SmsCodeResponse> {
         val sendSmsRequest = SmsCodeRequest(phone = phone)
-        return  apiService.sendSmsCode(sendSmsRequest)
+        return apiService.sendSmsCode(sendSmsRequest)
     }
 
     fun registerUser(
@@ -46,7 +48,7 @@ object HairstyleRepository {
         phone: String,
         password: String,
     )
-    :Call<LoginResponse> {
+            : Call<LoginResponse> {
         val loginRequest = LoginRequest(phone = phone, password = password)
         return apiService.loginUser(loginRequest)
     }
@@ -59,5 +61,33 @@ object HairstyleRepository {
     ): Call<ResetPasswordResponse> {
         val resetPasswordRequest = ResetPasswordRequest(phone, smsNo, smsCode, password)
         return apiService.resetPassword(resetPasswordRequest)
+    }
+
+//    fun updateUser(
+//        nickname: String?,
+//        username: String?,
+//        email: String?,
+//        gender: String?,
+//        age: Int?,
+//        address: String?,
+//        mystyle: String?,
+//        avatar: String?
+//    ): Call<UserUpdateResponse> {
+//        val updateUserRequest = UpdateUserRequest(
+//            nickname = nickname,
+//            username = username,
+//            email = email,
+//            gender = gender,
+//            age = age,
+//            address = address,
+//            mystyle = mystyle,
+//            avatar = avatar
+//        )
+//        return apiService.updateUser(updateUserRequest)
+//    }
+
+    fun updateUser(updateUserRequest:UpdateUserRequest
+    ): Call<UserUpdateResponse> {
+        return apiService.updateUser(updateUserRequest)
     }
 }

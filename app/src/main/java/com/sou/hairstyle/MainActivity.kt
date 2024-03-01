@@ -2,7 +2,6 @@ package com.sou.hairstyle
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -12,12 +11,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivityMainBinding
+import com.sou.hairstyle.ui.userInfo.UserInfoFragment
 import com.sou.hairstyle.ui.release.AddHairStyleActivity
 
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), UserInfoFragment.FragmentUserInfoListener {
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         Fresco.initialize(applicationContext)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferencesManager = SharedPreferencesManager.getInstance(this)
 
         val navView: BottomNavigationView = binding.navView
 
@@ -48,5 +50,12 @@ class MainActivity : AppCompatActivity() {
             return@setOnItemSelectedListener true
         }
         supportActionBar?.hide()
+    }
+
+    override fun navigateToActivityAndFinish(intent: Intent) {
+        sharedPreferencesManager.clearUser()
+        sharedPreferencesManager.clearToken()
+        startActivity(intent)
+        finish()
     }
 }
