@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -81,23 +82,27 @@ public class IMGGalleryActivity extends AppCompatActivity implements View.OnClic
     };
 
     private static final String TAG = "IMGGalleryActivity";
+    private String[] permissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.image_gallery_activity);
-
-        if (!IMGPermissionUtils.isPermissionsGranted(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {//android 13开始媒体文件权限变更了
+            permissions = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+        } else {
+            permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        }
+        if (!IMGPermissionUtils.isPermissionsGranted(this, permissions)) {
             ViewStub stub = findViewById(R.id.vs_tips_stub);
             View view = stub.inflate();
             View button = view.findViewById(R.id.image_btn_enable);
             if (button != null) {
                 button.setOnClickListener(this);
             }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_STORAGE);
+            ActivityCompat.requestPermissions(this, permissions, REQ_STORAGE);
         }
-
         mGalleryMode = getIntent().getParcelableExtra(EXTRA_CHOOSE_MODE);
         if (mGalleryMode == null) {
             mGalleryMode = new IMGChooseMode();
@@ -115,7 +120,7 @@ public class IMGGalleryActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        if (IMGPermissionUtils.isPermissionsGranted(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
+        if (IMGPermissionUtils.isPermissionsGranted(this, permissions)) {
             new IMGScanTask(this).execute();
         }
     }
@@ -224,7 +229,7 @@ public class IMGGalleryActivity extends AppCompatActivity implements View.OnClic
         if (v.getId() == R.id.tv_album_folder) {
             showGalleryMenu();
         } else if (v.getId() == R.id.image_btn_enable) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_STORAGE);
+            ActivityCompat.requestPermissions(this, permissions, REQ_STORAGE);
         }
     }
 
