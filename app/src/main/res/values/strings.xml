@@ -52,4 +52,7 @@
 
     <string name="comment_count_format">%1$d条评论</string>
     <string name="hair_style_detail">发型详情</string>
+
+    <string name="male">男</string>
+    <string name="female">女</string>
 </resources>

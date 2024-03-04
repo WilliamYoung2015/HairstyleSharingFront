@@ -10,6 +10,7 @@ import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
+import com.sou.hairstyle.network.Response.User
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoResponse
 import retrofit2.http.GET
@@ -36,6 +37,9 @@ interface ApiService {
     fun registerUser(
         @Body registerRequest: RegisterRequest
     ): Call<RegisterResponse>
+
+    @GET("user")
+    fun getUserInfo(): Call<LoginResponse>
 
     @POST("user/login")
     fun loginUser(
