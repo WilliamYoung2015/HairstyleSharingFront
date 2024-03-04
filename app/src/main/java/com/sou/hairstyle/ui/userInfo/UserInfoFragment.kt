@@ -1,5 +1,6 @@
 package com.sou.hairstyle.ui.userInfo
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.sou.hairstyle.MainActivity
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivityUserinfoBinding
 import com.sou.hairstyle.ui.login.LoginActivity
@@ -17,9 +17,14 @@ import com.sou.hairstyle.ui.setting.SettingActivity
 
 class UserInfoFragment : Fragment() {
 
+    companion object {
+        private const val USER_INFO_REQUEST_CODE = 1
+    }
     interface FragmentUserInfoListener {
         fun navigateToActivityAndFinish(intent: Intent)
     }
+
+    private lateinit var userInfoViewModel: UserInfoViewModel
     private var userInfoListener: FragmentUserInfoListener? = null
 
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
@@ -41,7 +46,7 @@ class UserInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val userInfoViewModel =
+        userInfoViewModel =
             ViewModelProvider(this).get(UserInfoViewModel::class.java)
 
         _binding = ActivityUserinfoBinding.inflate(inflater, container, false)
@@ -56,9 +61,16 @@ class UserInfoFragment : Fragment() {
             binding.apply {
                 infoNicknameText.text = if (user?.nickname.isNullOrEmpty()) "空" else user?.nickname
                 infoGenderText.text = if (user?.gender.isNullOrEmpty()) "空" else user?.gender
+                when(user?.gender){
+                    "Male" -> infoGenderText.text = "男"
+                    "Female" -> infoGenderText.text = "女"
+                    else -> {
+                        infoGenderText.text = ""
+                    }
+                }
                 infoAgeText.text = user?.age?.toString() ?: "空"
                 infoAddressText.text = if (user?.address.isNullOrEmpty()) "空" else user?.address
-                infoStyleText.text = if (user?.my_style.isNullOrEmpty()) "空" else user?.my_style
+                infoStyleText.text = if (user?.mystyle.isNullOrEmpty()) "空" else user?.mystyle
 
                 // If you have an avatar image, set it here
                 // Example: avatarImage.setImageBitmap(user.avatarBitmap)
@@ -85,10 +97,26 @@ class UserInfoFragment : Fragment() {
         binding.settingsButton.setOnClickListener {
             // Handle settings action
             val intent = Intent(activity, SettingActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, USER_INFO_REQUEST_CODE)
+
+//            val intent = Intent(activity, HairstyleInfoActivity::class.java)
+//            intent.putExtra("HAIR_INFO_ITEM", item) // Make sure HairInfoItem is Serializable or Parcelable
+//            startActivityForResult(intent, HAIRSTYLE_INFO_REQUEST_CODE)
         }
         return root
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == USER_INFO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val user = sharedPreferencesManager.getUser()
+            if (user != null) {
+                userInfoViewModel.initUserInfo(user)
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -15,6 +15,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/uploadImg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="4dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#eeeff0"
+                android:src="@drawable/icon_addpic_unfocused"
+                android:scaleType="center"/>
+
             <!-- Nickname -->
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,7 +48,7 @@
                     android:layout_marginTop="8dp"
                     android:hint="@string/input_nickname"
                     android:padding="12dp"
-                    android:background="@drawable/edittext_rounded_background"
+                    android:background="@drawable/edit_background"
                     android:textSize="16sp"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#B3FFFFFF"/>
@@ -63,7 +73,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <Button
@@ -71,24 +81,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="&lt;"
+                        android:textSize="20dp"
                         android:background="#00000000"/>
 
                     <EditText
                         android:id="@+id/edit_age_number"
-                        android:layout_width="0dp"
+                        android:layout_width="100dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:inputType="number"
-                        android:gravity="center_horizontal"
                         android:text="100"
+                        android:gravity="center_vertical|center_horizontal"
                         android:textColor="@color/white"
-                        android:background="@drawable/edittext_rounded_background"/>
+                        android:background="@drawable/edit_background"/>
 
                     <Button
                         android:id="@+id/button_increment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="&gt;"
+                        android:textSize="20dp"
                         android:background="#00000000"/>
                 </LinearLayout>
 
@@ -110,17 +122,43 @@
                     android:textSize="18sp"
                     android:textColor="#FFFFFF"/>
 
-                <EditText
-                    android:id="@+id/genderInput"
+                <RadioGroup
+                    android:id="@+id/genderGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/input_gender"
-                    android:padding="12dp"
-                    android:background="@drawable/edittext_rounded_background"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#B3FFFFFF"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <RadioButton
+                        android:id="@+id/radioMale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/male"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="@color/white"
+                        android:layout_marginEnd="16dp"/> <!-- Customize this with your theme color -->
+
+                    <RadioButton
+                        android:id="@+id/radioFemale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/female"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="@color/white"
+                        android:layout_marginStart="16dp"/> <!-- Customize this with your theme color -->
+                </RadioGroup>
+<!--                <EditText-->
+<!--                    android:id="@+id/genderInput"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="48dp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:hint="@string/input_gender"-->
+<!--                    android:padding="12dp"-->
+<!--                    android:background="@drawable/edit_background"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textColor="#FFFFFF"-->
+<!--                    android:textColorHint="#B3FFFFFF"/>-->
 
             </LinearLayout>
 
@@ -147,7 +185,7 @@
                     android:layout_marginTop="8dp"
                     android:hint="@string/input_address"
                     android:padding="12dp"
-                    android:background="@drawable/edittext_rounded_background"
+                    android:background="@drawable/edit_background"
                     android:textSize="16sp"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#B3FFFFFF"/>
@@ -168,17 +206,31 @@
                     android:text="@string/style"
                     android:textSize="18sp"
                     android:textColor="#FFFFFF"/>
-
+<!--                <EditText-->
+<!--                    android:id="@+id/description"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="120dp"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:background="@drawable/edit_background"-->
+<!--                    android:gravity="start"-->
+<!--                    android:padding="4dp"-->
+<!--                    android:maxLength="100"-->
+<!--                    android:hint="请输入100字内描述内容"-->
+<!--                    android:textColorHint="#999999"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textColor="@color/white"/>-->
                 <EditText
                     android:id="@+id/styleInput"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="start"
                     android:hint="@string/input_style"
+                    android:maxLength="100"
                     android:padding="12dp"
-                    android:background="@drawable/edittext_rounded_background"
+                    android:background="@drawable/edit_background"
                     android:textSize="16sp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textColorHint="#B3FFFFFF"/>
 
             </LinearLayout>
