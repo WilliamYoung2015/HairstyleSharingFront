@@ -47,10 +47,11 @@
         <!-- 设置按钮 -->
         <ImageButton
             android:id="@+id/settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_manage"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/setting"
             android:layout_alignParentRight="true"
+            android:scaleType="fitCenter"
             android:layout_margin="16dp"
             android:background="?android:selectableItemBackgroundBorderless"
             android:contentDescription="@string/settings" />

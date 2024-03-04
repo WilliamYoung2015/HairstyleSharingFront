@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivitySplashBinding
 import com.sou.hairstyle.network.HairstyleRepository
+import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.RetrofitClient
 import com.sou.hairstyle.ui.login.LoginActivity
@@ -90,10 +91,14 @@ class SplashActivity : AppCompatActivity() {
 // To retrieve a token
         val token = SharedPreferencesManager.getInstance(this).getToken()
         if(token.isNullOrEmpty()){
+            SharedPreferencesManager.getInstance(this).clearToken()
+            SharedPreferencesManager.getInstance(this).clearUser()
             this.fetchToken()
+
         }else
         {
             RetrofitClient.saveToken(token)
+            fetchUserInfo()
         }
 
     }
@@ -123,6 +128,39 @@ class SplashActivity : AppCompatActivity() {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 // 处理请求失败的情况，比如网络问题
                 println("tokenLiveData onFailure")
+            }
+        })
+    }
+
+    private fun fetchUserInfo() {
+        val _context = this;
+        val getUserInfoData: MutableLiveData<LoginResponse> = MutableLiveData()
+        println(" getUserInfoData start")
+        HairstyleRepository.getUserInfo().enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                println("getUserInfoData onResponse")
+                if (response.isSuccessful) {
+                    println("getUserInfoData onResponse isSuccessful"+response.body())
+                    getUserInfoData.postValue(response.body())
+                    println(getUserInfoData.value?.code)
+                    println("getUserInfoData:"+ (response.body()?.data?.user ?: "??"))
+                    if(response.body()?.code != 1){
+                        SharedPreferencesManager.getInstance(_context).clearUser()
+                    }else{
+                        response.body()?.data?.user?.let {
+                            SharedPreferencesManager.getInstance(_context).saveUser(it)
+                        };
+                    }
+
+                } else {
+                    // 处理错误情况
+                    println("getUserInfoData onResponse error")
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                // 处理请求失败的情况，比如网络问题
+                println("getUserInfoData onFailure")
             }
         })
     }

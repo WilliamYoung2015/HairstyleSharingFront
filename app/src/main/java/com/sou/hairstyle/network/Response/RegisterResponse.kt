@@ -15,7 +15,7 @@ data class User(
     val gender: String?=null,
     val age: Int?=null,
     val address: String?=null,
-    val my_style: String?=null,
+    val mystyle: String?=null,
     val avatar: String?=null,
     val last_login: String?=null,
     val created_at: String?=null,

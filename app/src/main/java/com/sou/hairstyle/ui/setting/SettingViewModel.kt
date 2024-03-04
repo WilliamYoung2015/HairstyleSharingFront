@@ -41,6 +41,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
     // Inside SettingViewModel class
     fun updateUser(updateUserRequest: UpdateUserRequest) {
         println("updateUser 1111111111")
+        println(updateUserRequest)
         // Assume that you have a repository with the method to update user
         viewModelScope.launch {
             _userSettings.value = Resource.Loading() // 设置加载状态

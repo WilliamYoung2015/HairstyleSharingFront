@@ -10,6 +10,7 @@ import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
+import com.sou.hairstyle.network.Response.User
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoItem
 import com.sou.hairstyle.ui.home.HairInfoResponse
@@ -27,6 +28,10 @@ object HairstyleRepository {
 
     fun getToken(): Call<TokenResponse> {
         return apiService.getToken()
+    }
+
+    fun getUserInfo(): Call<LoginResponse> {
+        return apiService.getUserInfo()
     }
 
     fun sendSmsCode(phone: String): Call<SmsCodeResponse> {
