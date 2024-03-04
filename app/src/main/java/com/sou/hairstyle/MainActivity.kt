@@ -43,11 +43,9 @@ class MainActivity : AppCompatActivity(), UserInfoFragment.FragmentUserInfoListe
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        navView.setOnItemSelectedListener {
-            if (it.itemId == R.id.navigation_dashboard) {
-                startActivity(Intent(this, AddHairStyleActivity::class.java))
-            }
-            return@setOnItemSelectedListener true
+        navView.menu.findItem(R.id.navigation_dashboard).setOnMenuItemClickListener {
+            startActivity(Intent(this, AddHairStyleActivity::class.java))
+            return@setOnMenuItemClickListener true
         }
         supportActionBar?.hide()
     }
