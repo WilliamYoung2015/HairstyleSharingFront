@@ -115,7 +115,7 @@ class AddHairStyleActivity: AppCompatActivity() {
             params["age"] = textAge
             params["sex"] = selSex
             params["tags"] = selTags.toString().replace("[", "").replace("]", "")
-            viewModel.addHairStyle(params, arrayListOf(mImageFile!!.absolutePath))
+            viewModel.addHairStyle(params, arrayListOf(mImageFile!!))
         }
         initData()
         initTags()

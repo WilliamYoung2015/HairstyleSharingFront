@@ -53,9 +53,10 @@ interface ApiService {
         @Body resetPasswordRequest: ResetPasswordRequest
     ): Call<ResetPasswordResponse>
 
+    @Multipart
     @PUT("user")
     fun updateUser(
-        @Body updateUserRequest: UpdateUserRequest
+        @Part partList: List<MultipartBody.Part>
     ): Call<UserUpdateResponse>
 
 

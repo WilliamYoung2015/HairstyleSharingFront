@@ -15,6 +15,7 @@ import com.sou.hairstyle.network.Response.User
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import java.io.File
 
 
 class SettingViewModel(application: Application) : AndroidViewModel(application){
@@ -39,13 +40,13 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
     }
 
     // Inside SettingViewModel class
-    fun updateUser(updateUserRequest: UpdateUserRequest) {
+    fun updateUser(params: Map<String, String>, avatar: File?) {
         println("updateUser 1111111111")
-        println(updateUserRequest)
+//        println(updateUserRequest)
         // Assume that you have a repository with the method to update user
         viewModelScope.launch {
             _userSettings.value = Resource.Loading() // 设置加载状态
-            HairstyleRepository.updateUser(updateUserRequest).enqueue(object : retrofit2.Callback<UserUpdateResponse> {
+            HairstyleRepository.updateUser(params, avatar).enqueue(object : retrofit2.Callback<UserUpdateResponse> {
                 override fun onResponse(call: Call<UserUpdateResponse>, response: retrofit2.Response<UserUpdateResponse>) {
                     if (response.isSuccessful && response.body() != null) {
                         println("updateUser response.body():"+response.body())

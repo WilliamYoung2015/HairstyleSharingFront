@@ -33,15 +33,13 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
 //    private val viewModel: SettingViewModel by viewModels()
     private lateinit var viewModel: SettingViewModel
-
-    private lateinit var uploadImg: ImageView
     private var mImageFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding = ActivitySettingBinding.inflate(layoutInflater)
-        setTitle(R.string.settings);
+        setTitle(R.string.settings)
         setContentView(binding.root)
 
         binding.uploadImg.setOnClickListener {
@@ -145,8 +143,6 @@ class SettingActivity : AppCompatActivity() {
     }
     // Inside SettingActivity class, in the saveSettings() function
     private fun saveSettings() {
-
-
         val gender = when (binding.genderGroup.checkedRadioButtonId) {
             R.id.radioMale -> "Male"
             R.id.radioFemale -> "Female"
@@ -155,23 +151,28 @@ class SettingActivity : AppCompatActivity() {
 
 
         val nickname = binding.nicknameInput.text.toString()
-        val age = binding.editAgeNumber.text.toString().toIntOrNull() ?: 0
+        val age = binding.editAgeNumber.text.toString()
 //        val gender = binding.genderInput.text.toString()
         val address = binding.addressInput.text.toString()
         val my_style = binding.styleInput.text.toString()
 
         // Create the UpdateUserRequest object
-        val updateUserRequest = UpdateUserRequest(
-            nickname = nickname,
-            gender = gender,
-            age = age,
-            address = address,
-            mystyle = my_style,
-            avatar = mImageFile
-        )
-
+//        val updateUserRequest = UpdateUserRequest(
+//            nickname = nickname,
+//            gender = gender,
+//            age = age,
+//            address = address,
+//            mystyle = my_style,
+//            avatar = mImageFile
+//        )
+        val params = HashMap<String, String>()
+        params["nickname"] = nickname
+        params["gender"] = gender
+        params["age"] = age
+        params["address"] = address
+        params["mystyle"] = my_style
         // Call the updateUser method in the ViewModel
-        viewModel.updateUser(updateUserRequest)
+        viewModel.updateUser(params, mImageFile)
     }
 
     private fun chooseImages(){
@@ -197,7 +198,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun onImageEditDone() {
-        uploadImg.setImageURI(Uri.fromFile(mImageFile))
+        binding.uploadImg.setImageURI(Uri.fromFile(mImageFile))
     }
 
     override fun onRequestPermissionsResult(

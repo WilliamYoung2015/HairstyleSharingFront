@@ -9,16 +9,17 @@ import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.network.Response.AddHairStyleResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import java.io.File
 
 class AddHairStyleViewModel: ViewModel() {
     private val _uploadStatus = MutableLiveData<Resource<AddHairStyleResponse>>()
     val uploadStatus: LiveData<Resource<AddHairStyleResponse>> = _uploadStatus
     fun addHairStyle(params: Map<String, String>,
-                     paths: List<String>){
+                     pics: List<File>){
         _uploadStatus.value = Resource.Loading()
         viewModelScope.launch {
             try {
-                HairstyleRepository.releaseHairStyle(params, paths).enqueue(object : retrofit2.Callback<AddHairStyleResponse> {
+                HairstyleRepository.releaseHairStyle(params, pics).enqueue(object : retrofit2.Callback<AddHairStyleResponse> {
                     override fun onResponse(
                         call: Call<AddHairStyleResponse>,
                         response: retrofit2.Response<AddHairStyleResponse>

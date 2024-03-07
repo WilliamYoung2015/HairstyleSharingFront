@@ -93,25 +93,33 @@ object HairstyleRepository {
 //        return apiService.updateUser(updateUserRequest)
 //    }
 
-    fun updateUser(updateUserRequest:UpdateUserRequest
+    fun updateUser(params: Map<String, String>,
+                 avatar: File?
     ): Call<UserUpdateResponse> {
-        return apiService.updateUser(updateUserRequest)
+        val partList = arrayListOf<MultipartBody.Part>()
+        params.forEach { (key, value) ->
+            partList.add(MultipartBody.Part.createFormData(key, value))
+        }
+        if (avatar != null && avatar.exists()) {
+            val body1 = avatar.asRequestBody(MultipartBody.FORM)
+            partList.add(MultipartBody.Part.createFormData("avatar", avatar.name, body1))
+        }
+        return apiService.updateUser(partList)
     }
 
 
     fun releaseHairStyle(
-        map: Map<String, String>,
-        paths: List<String>,
+        params: Map<String, String>,
+        pics: List<File>,
     ): Call<AddHairStyleResponse> {
         val partList = arrayListOf<MultipartBody.Part>()
-        map.forEach { (key, value) ->
+        params.forEach { (key, value) ->
             partList.add(MultipartBody.Part.createFormData(key, value))
         }
-        paths.forEach {
-            val file1 = File(it)
-            if (file1.exists()) {
-                val body1 = file1.asRequestBody(MultipartBody.FORM)
-                partList.add(MultipartBody.Part.createFormData("images", file1.name, body1))
+        pics.forEach {
+            if (it.exists()) {
+                val body1 = it.asRequestBody(MultipartBody.FORM)
+                partList.add(MultipartBody.Part.createFormData("images", it.name, body1))
             }
         }
         return apiService.addHairStyle(partList)
