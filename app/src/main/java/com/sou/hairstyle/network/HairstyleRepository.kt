@@ -5,16 +5,18 @@ import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
 import com.sou.hairstyle.network.Request.UpdateUserRequest
+import com.sou.hairstyle.network.Response.AddHairStyleResponse
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
-import com.sou.hairstyle.network.Response.User
 import com.sou.hairstyle.network.Response.UserUpdateResponse
-import com.sou.hairstyle.ui.home.HairInfoItem
 import com.sou.hairstyle.ui.home.HairInfoResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
+import java.io.File
 
 object HairstyleRepository {
 
@@ -94,5 +96,24 @@ object HairstyleRepository {
     fun updateUser(updateUserRequest:UpdateUserRequest
     ): Call<UserUpdateResponse> {
         return apiService.updateUser(updateUserRequest)
+    }
+
+
+    fun releaseHairStyle(
+        map: Map<String, String>,
+        paths: List<String>,
+    ): Call<AddHairStyleResponse> {
+        val partList = arrayListOf<MultipartBody.Part>()
+        map.forEach { (key, value) ->
+            partList.add(MultipartBody.Part.createFormData(key, value))
+        }
+        paths.forEach {
+            val file1 = File(it)
+            if (file1.exists()) {
+                val body1 = file1.asRequestBody(MultipartBody.FORM)
+                partList.add(MultipartBody.Part.createFormData("images", file1.name, body1))
+            }
+        }
+        return apiService.addHairStyle(partList)
     }
 }

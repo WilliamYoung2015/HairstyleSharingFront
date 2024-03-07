@@ -27,7 +27,7 @@ class HomeViewModel : ViewModel() {
                 println("_hairInfoItems code:"+response)
                 if (response.isSuccessful) {
                     _hairInfoResponse.postValue(response.body())
-//                    _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
+                    _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
                     println("_hairInfoItems:"+response.body())
                 }
             }

@@ -99,6 +99,11 @@
                 android:textSize="18sp"
                 android:text="标签"
                 android:layout_marginTop="32dp"/>
+            <com.sou.hairstyle.widget.FlowLayout
+                android:id="@+id/tagFlow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonRelease"

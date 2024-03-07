@@ -6,21 +6,30 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.ViewModelProvider
 import com.sou.hairstyle.R
 import com.sou.hairstyle.imaging.IMGEditActivity
 import com.sou.hairstyle.imaging.IMGGalleryActivity
 import com.sou.hairstyle.imaging.core.util.IMGPermissionUtils
 import com.sou.hairstyle.imaging.gallery.model.IMGChooseMode
 import com.sou.hairstyle.imaging.gallery.model.IMGImageInfo
+import com.sou.hairstyle.network.Resource
+import com.sou.hairstyle.widget.FlowLayout
 import java.io.File
-import java.util.Arrays
 import java.util.UUID
 
 const val REQ_IMAGE_EDIT = 1
@@ -30,8 +39,16 @@ class AddHairStyleActivity: AppCompatActivity() {
     private lateinit var uploadImg: ImageView
     private lateinit var description: EditText
     private lateinit var season: Spinner
+    private lateinit var sex: Spinner
     private lateinit var age: EditText
+    private lateinit var tagFlow: FlowLayout
+    private lateinit var buttonRelease: AppCompatButton
+    private lateinit var viewModel: AddHairStyleViewModel
     private var mImageFile: File? = null
+    private var selSeason = ""  //季节
+    private var selSex = ""     //性别
+    private val tags = arrayListOf("超美", "初春", "春夏", "新风", "初秋", "秋冬")
+    private val selTags = arrayListOf<String>()
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,24 +56,136 @@ class AddHairStyleActivity: AppCompatActivity() {
         supportActionBar?.title = "发布新发型"
         supportActionBar?.setBackgroundDrawable(getDrawable(R.color.black_overlay))
         setContentView(R.layout.activity_release_hair_style)
+        viewModel = ViewModelProvider(this)[AddHairStyleViewModel::class.java]
+        viewModel.uploadStatus.observe(this) {
+            when (it) {
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success -> {
+                    println(it.data)
+                    Toast.makeText(this, "发布成功", Toast.LENGTH_LONG).show()
+                }
+                is Resource.Error -> {
+                    // 显示错误信息
+                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
         uploadImg = findViewById(R.id.uploadImg)
         description = findViewById(R.id.description)
         season = findViewById(R.id.season)
         age = findViewById(R.id.age)
+        sex = findViewById(R.id.sex)
+        tagFlow = findViewById(R.id.tagFlow)
         uploadImg.setOnClickListener {
-//            if (IMGPermissionUtils.isPermissionGranted(
-//                    this,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-//                )
-//            ) {
-//                ActivityCompat.requestPermissions(
-//                    this,
-//                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-//                    REQ_STORAGE
-//                )
-//            } else {
-                chooseImages()
-//            }
+            chooseImages()
+        }
+        buttonRelease = findViewById(R.id.buttonRelease)
+        buttonRelease.setOnClickListener {
+            if (mImageFile == null) {
+                Toast.makeText(this, "请选择发型图片", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val desc = description.text.toString().trim()
+            if (desc.isNullOrEmpty()) {
+                Toast.makeText(this, "请填写描述", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (selSeason.isNullOrEmpty()) {
+                Toast.makeText(this, "请选择季节", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val textAge = age.text.toString().trim()
+            if (textAge.isNullOrEmpty()) {
+                Toast.makeText(this, "请输入年龄", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (selSex.isNullOrEmpty()) {
+                Toast.makeText(this, "请选择性别", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (selTags.isNullOrEmpty()) {
+                Toast.makeText(this, "请选择标签", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val params = HashMap<String, String>()
+            params["desc"] = desc
+            params["title"] = selSeason
+            params["age"] = textAge
+            params["sex"] = selSex
+            params["tags"] = selTags.toString().replace("[", "").replace("]", "")
+            viewModel.addHairStyle(params, arrayListOf(mImageFile!!.absolutePath))
+        }
+        initData()
+        initTags()
+    }
+
+    private fun initData(){
+        val data = arrayListOf("请选择季节", "春季", "夏季", "秋季", "冬季")
+        val adapter = ArrayAdapter(this, R.layout.item_spinner, data)
+        season.adapter = adapter
+        season.setSelection(0)
+        season.onItemSelectedListener = object : OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selSeason = if (position == 0 || position >= data.size){
+                    ""
+                } else {
+                    data[position]
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        val sexArr = arrayListOf("请选择性别", "男", "女", "其他")
+        val sexAdapter = ArrayAdapter(this, R.layout.item_spinner, sexArr)
+        sex.adapter = sexAdapter
+        sex.setSelection(0)
+        sex.onItemSelectedListener = object : OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selSex = if (position == 0 || position >= sexArr.size){
+                    ""
+                } else {
+                    sexArr[position]
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+    }
+
+    private fun initTags(){
+        tagFlow.removeAllViews()
+        tags.forEach {
+            val checkBox = LayoutInflater.from(this).inflate(
+                R.layout.add_hair_style_tag_select,
+                tagFlow,
+                false
+            ) as CheckBox
+            checkBox.text = it
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selTags.add(it)
+                } else {
+                    selTags.remove(it)
+                }
+                description.setText(selTags.toString().replace("[", "").replace("]", ""))
+            }
+            tagFlow.addView(checkBox)
         }
     }
 
@@ -92,7 +221,6 @@ class AddHairStyleActivity: AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.d("+++++++", Arrays.toString(grantResults))
         if (!IMGPermissionUtils.isPermissionsGranted(this, permissions)) {
             AlertDialog.Builder(this)
                 .setTitle("提示")
