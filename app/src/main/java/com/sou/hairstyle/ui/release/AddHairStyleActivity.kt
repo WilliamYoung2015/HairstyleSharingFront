@@ -183,7 +183,7 @@ class AddHairStyleActivity: AppCompatActivity() {
                 } else {
                     selTags.remove(it)
                 }
-                description.setText(selTags.toString().replace("[", "").replace("]", ""))
+//                description.setText(selTags.toString().replace("[", "").replace("]", ""))
             }
             tagFlow.addView(checkBox)
         }
