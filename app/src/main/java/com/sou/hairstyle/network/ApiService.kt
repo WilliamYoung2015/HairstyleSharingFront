@@ -1,5 +1,6 @@
 package com.sou.hairstyle.network
 
+import com.sou.hairstyle.network.Request.AddHairStyleRequest
 import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
@@ -14,6 +15,7 @@ import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.GET
 import retrofit2.Call
 import retrofit2.http.Body
@@ -56,13 +58,26 @@ interface ApiService {
     @Multipart
     @PUT("user")
     fun updateUser(
-        @Part partList: List<MultipartBody.Part>
+        @Part("body") updateUserRequest:UpdateUserRequest,
+        @Part avatar: MultipartBody.Part
+    ): Call<UserUpdateResponse>
+
+    @Multipart
+    @PUT("user")
+    fun updateUser(
+        @Part partList: List<MultipartBody.Part>,
+    ): Call<UserUpdateResponse>
+
+    @PUT("user")
+    fun updateUser(
+        @Body updateUserRequest:UpdateUserRequest
     ): Call<UserUpdateResponse>
 
 
     @Multipart
     @PUT("/hairstyle")
     fun addHairStyle(
+        @Part("body") addHairStyleRequest: AddHairStyleRequest,
         @Part partList: List<MultipartBody.Part>,
     ): Call<AddHairStyleResponse>
 }

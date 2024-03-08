@@ -10,5 +10,5 @@ data class UpdateUserRequest(
     val age: Int?,
     val address: String?=null,
     val mystyle: String?=null,
-    val avatar: File?=null, // Assuming avatar is a String path or URL for simplicity
+//    val avatar: File?=null, // Assuming avatar is a String path or URL for simplicity
 )

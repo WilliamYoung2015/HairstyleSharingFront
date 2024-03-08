@@ -157,22 +157,21 @@ class SettingActivity : AppCompatActivity() {
         val my_style = binding.styleInput.text.toString()
 
         // Create the UpdateUserRequest object
-//        val updateUserRequest = UpdateUserRequest(
-//            nickname = nickname,
-//            gender = gender,
-//            age = age,
-//            address = address,
-//            mystyle = my_style,
-//            avatar = mImageFile
-//        )
-        val params = HashMap<String, String>()
-        params["nickname"] = nickname
-        params["gender"] = gender
-        params["age"] = age
-        params["address"] = address
-        params["mystyle"] = my_style
+        val updateUserRequest = UpdateUserRequest(
+            nickname = nickname,
+            gender = gender,
+            age = age.toIntOrNull()?: 0,
+            address = address,
+            mystyle = my_style
+        )
+//        val params = HashMap<String, String>()
+//        params["nickname"] = nickname
+//        params["gender"] = gender
+//        params["age"] = age
+//        params["address"] = address
+//        params["mystyle"] = my_style
         // Call the updateUser method in the ViewModel
-        viewModel.updateUser(params, mImageFile)
+        viewModel.updateUser(updateUserRequest, mImageFile)
     }
 
     private fun chooseImages(){

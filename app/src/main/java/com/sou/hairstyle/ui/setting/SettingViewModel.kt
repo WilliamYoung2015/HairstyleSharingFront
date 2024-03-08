@@ -40,13 +40,13 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
     }
 
     // Inside SettingViewModel class
-    fun updateUser(params: Map<String, String>, avatar: File?) {
+    fun updateUser(updateUserRequest:UpdateUserRequest, avatar: File?) {
         println("updateUser 1111111111")
 //        println(updateUserRequest)
         // Assume that you have a repository with the method to update user
         viewModelScope.launch {
             _userSettings.value = Resource.Loading() // 设置加载状态
-            HairstyleRepository.updateUser(params, avatar).enqueue(object : retrofit2.Callback<UserUpdateResponse> {
+            HairstyleRepository.updateUser(updateUserRequest, avatar).enqueue(object : retrofit2.Callback<UserUpdateResponse> {
                 override fun onResponse(call: Call<UserUpdateResponse>, response: retrofit2.Response<UserUpdateResponse>) {
                     if (response.isSuccessful && response.body() != null) {
                         println("updateUser response.body():"+response.body())

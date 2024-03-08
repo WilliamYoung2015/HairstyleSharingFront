@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sou.hairstyle.network.HairstyleRepository
+import com.sou.hairstyle.network.Request.AddHairStyleRequest
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.network.Response.AddHairStyleResponse
 import kotlinx.coroutines.launch
@@ -14,12 +15,14 @@ import java.io.File
 class AddHairStyleViewModel: ViewModel() {
     private val _uploadStatus = MutableLiveData<Resource<AddHairStyleResponse>>()
     val uploadStatus: LiveData<Resource<AddHairStyleResponse>> = _uploadStatus
-    fun addHairStyle(params: Map<String, String>,
+    fun addHairStyle(
+        addHairStyleRequest: AddHairStyleRequest,
+        params: Map<String, String>,
                      pics: List<File>){
         _uploadStatus.value = Resource.Loading()
         viewModelScope.launch {
             try {
-                HairstyleRepository.releaseHairStyle(params, pics).enqueue(object : retrofit2.Callback<AddHairStyleResponse> {
+                HairstyleRepository.releaseHairStyle(addHairStyleRequest,params, pics).enqueue(object : retrofit2.Callback<AddHairStyleResponse> {
                     override fun onResponse(
                         call: Call<AddHairStyleResponse>,
                         response: retrofit2.Response<AddHairStyleResponse>

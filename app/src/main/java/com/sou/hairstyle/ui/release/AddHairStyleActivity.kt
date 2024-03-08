@@ -27,6 +27,7 @@ import com.sou.hairstyle.imaging.IMGGalleryActivity
 import com.sou.hairstyle.imaging.core.util.IMGPermissionUtils
 import com.sou.hairstyle.imaging.gallery.model.IMGChooseMode
 import com.sou.hairstyle.imaging.gallery.model.IMGImageInfo
+import com.sou.hairstyle.network.Request.AddHairStyleRequest
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.widget.FlowLayout
 import java.io.File
@@ -109,13 +110,15 @@ class AddHairStyleActivity: AppCompatActivity() {
                 Toast.makeText(this, "请选择标签", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            val strTags = selTags.toString().replace("[", "").replace("]", "")
             val params = HashMap<String, String>()
             params["desc"] = desc
             params["title"] = selSeason
             params["age"] = textAge
             params["sex"] = selSex
-            params["tags"] = selTags.toString().replace("[", "").replace("]", "")
-            viewModel.addHairStyle(params, arrayListOf(mImageFile!!))
+            params["tags"] = strTags
+            val addHairStyleRequest = AddHairStyleRequest(desc, selSeason, strTags, "")
+            viewModel.addHairStyle(addHairStyleRequest, params, arrayListOf(mImageFile!!))
         }
         initData()
         initTags()
