@@ -70,7 +70,7 @@ class HairInfoAdapter(var items: List<HairInfoItem>,
             holder.titleView.text = item.title
             holder.descriptionView.text = item.description
             holder.likeCountView.text = item.star_sum.toString()
-            holder.likeButton.setImageResource(if (item.isLiked) android.R.drawable.star_big_on else android.R.drawable.star_big_off)
+            holder.likeButton.setImageResource(if (item.isLiked) R.drawable.stared else R.drawable.star)
 
 
             // Set up a click listener for the like button

@@ -78,7 +78,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="@string/like_button"
-                android:src="@android:drawable/btn_star_big_off" />
+                android:src="@drawable/star" />
 
 
         </LinearLayout>
