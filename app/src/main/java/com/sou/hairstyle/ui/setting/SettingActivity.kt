@@ -12,7 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.ImageLoader
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivitySettingBinding
 import com.sou.hairstyle.imaging.IMGEditActivity
@@ -63,6 +65,7 @@ class SettingActivity : AppCompatActivity() {
         viewModel.userInit.observe(this) { user ->
             binding.nicknameInput.setText(user?.nickname)
             binding.editAgeNumber.setText(user?.age.toString())
+            ImageLoader.loadImage(this, user?.avatar, binding.uploadImg)
 //            binding.genderInput.setText(user?.gender)
             binding.addressInput.setText(user?.address)
             binding.styleInput.setText(user?.mystyle)

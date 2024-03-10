@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.sou.hairstyle.common.ImageLoader
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivityUserinfoBinding
 import com.sou.hairstyle.ui.login.LoginActivity
@@ -74,6 +75,7 @@ class UserInfoFragment : Fragment() {
 
                 // If you have an avatar image, set it here
                 // Example: avatarImage.setImageBitmap(user.avatarBitmap)
+                this@UserInfoFragment.context?.let { ImageLoader.loadImage(it, user?.avatar, avatarImage) }
             }
         }
         val user = sharedPreferencesManager.getUser()

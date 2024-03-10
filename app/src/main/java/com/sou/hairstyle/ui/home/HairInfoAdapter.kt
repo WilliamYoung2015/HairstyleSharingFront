@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.ImageLoader
 
 class HairInfoAdapter(var items: List<HairInfoItem>,
                       private var showFooter: Boolean,
@@ -50,18 +51,20 @@ class HairInfoAdapter(var items: List<HairInfoItem>,
             val item = items[position]
 
             // Use Glide or another library to load images
-            Glide.with(holder.imageView.context)
-                .load(item.imageUrl)
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.ic_delete)
-                .into(holder.imageView)
+//            Glide.with(holder.imageView.context)
+//                .load(item.imageUrl)
+//                .placeholder(android.R.drawable.ic_menu_gallery)
+//                .error(android.R.drawable.ic_delete)
+//                .into(holder.imageView)
+            ImageLoader.loadImage(holder.imageView.context, item.imageUrl, holder.imageView)
 
-            Glide.with(holder.avatarView.context)
-                .load(item.avatarUrl)
-                .circleCrop() // if you want to crop the image in a circle
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.ic_delete)
-                .into(holder.avatarView)
+//            Glide.with(holder.avatarView.context)
+//                .load(item.avatarUrl)
+//                .circleCrop() // if you want to crop the image in a circle
+//                .placeholder(android.R.drawable.ic_menu_gallery)
+//                .error(android.R.drawable.ic_delete)
+//                .into(holder.avatarView)
+            ImageLoader.loadImage(holder.avatarView.context, item.avatarUrl, holder.avatarView)
 
             holder.titleView.text = item.title
             holder.descriptionView.text = item.description
