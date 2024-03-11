@@ -3,6 +3,13 @@ package com.sou.hairstyle.ui.hairstyleInfo
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -51,6 +58,8 @@ class HairstyleInfoActivity : AppCompatActivity() {
 
         binding.buttonAddComment.setOnClickListener {
             // Handle add comment click
+//            AddCommentDialogFragment().show(supportFragmentManager, "CustomDialogFragment")
+            showCustomDialog()
         }
     }
 
@@ -80,6 +89,44 @@ class HairstyleInfoActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+    fun showCustomDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_comment, null)
+        val alertDialog = AlertDialog.Builder(this, R.style.FullScreenDialog)
+            .setView(dialogView)
+            .create()
+        // 设置全屏遮罩层
+        alertDialog.window?.apply {
+            // 设置背景为全屏半透明遮罩
+            setBackgroundDrawableResource(R.drawable.overlay_dim)
+            // 布局参数全屏设置
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        }
+
+        // 显示弹出框
+        alertDialog.show()
+
+        // 设置点击遮罩层外的区域不关闭弹窗
+        alertDialog.setCanceledOnTouchOutside(false)
+
+        val buttonCancel = dialogView.findViewById<Button>(R.id.buttonCancel)
+        val buttonConfirm = dialogView.findViewById<Button>(R.id.buttonConfirm)
+
+        buttonCancel.setOnClickListener {
+            // 处理取消按钮点击事件
+            alertDialog.dismiss()
+        }
+
+        buttonConfirm.setOnClickListener {
+            // 处理确认按钮点击事件
+            val editTextComment = dialogView.findViewById<EditText>(R.id.editTextComment)
+            val comment = editTextComment.text.toString()
+            // TODO: 逻辑处理
+
+
+
+            alertDialog.dismiss()
         }
     }
 }
