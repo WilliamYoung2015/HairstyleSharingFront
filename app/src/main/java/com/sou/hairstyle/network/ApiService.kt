@@ -58,13 +58,6 @@ interface ApiService {
     @Multipart
     @PUT("user")
     fun updateUser(
-        @Part("body") updateUserRequest:UpdateUserRequest,
-        @Part avatar: MultipartBody.Part
-    ): Call<UserUpdateResponse>
-
-    @Multipart
-    @PUT("user")
-    fun updateUser(
         @Part partList: List<MultipartBody.Part>,
     ): Call<UserUpdateResponse>
 
@@ -77,7 +70,6 @@ interface ApiService {
     @Multipart
     @PUT("/hairstyle")
     fun addHairStyle(
-        @Part("body") addHairStyleRequest: AddHairStyleRequest,
         @Part partList: List<MultipartBody.Part>,
     ): Call<AddHairStyleResponse>
 }

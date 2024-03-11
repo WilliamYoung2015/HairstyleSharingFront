@@ -109,11 +109,9 @@ object HairstyleRepository {
         partList.add(MultipartBody.Part.createFormData("address", updateUserRequest.address?: ""))
         partList.add(MultipartBody.Part.createFormData("mystyle", updateUserRequest.mystyle?: ""))
         return if (avatar != null && avatar.exists()) {
-//            val body1 = avatar.asRequestBody("image/jpg".toMediaType())
             val body1 = avatar.asRequestBody(FileUtil.getMediaType(avatar))
             val avatarPart = MultipartBody.Part.createFormData("avatar", avatar.name, body1)
             partList.add(avatarPart)
-//            apiService.updateUser(updateUserRequest, avatarPart)
             apiService.updateUser(partList)
         } else {
             apiService.updateUser(updateUserRequest)
@@ -122,21 +120,21 @@ object HairstyleRepository {
 
 
     fun releaseHairStyle(
-        addHairStyleRequest: AddHairStyleRequest,
         params: Map<String, String>,
         pics: List<File>,
     ): Call<AddHairStyleResponse> {
-        val requestBody = MultipartBody.Builder()
-        params.forEach { (key, value) ->
-            requestBody.addFormDataPart(key, value)
-        }
         val partList = arrayListOf<MultipartBody.Part>()
+//        val requestBody = MultipartBody.Builder()
+        params.forEach { (key, value) ->
+//            requestBody.addFormDataPart(key, value)
+            partList.add(MultipartBody.Part.createFormData(key, value))
+        }
         pics.forEach {
             if (it.exists()) {
-                val body1 = it.asRequestBody(MultipartBody.FORM)
+                val body1 = it.asRequestBody(FileUtil.getMediaType(it))
                 partList.add(MultipartBody.Part.createFormData("images", it.name, body1))
             }
         }
-        return apiService.addHairStyle(addHairStyleRequest, partList)
+        return apiService.addHairStyle(partList)
     }
 }

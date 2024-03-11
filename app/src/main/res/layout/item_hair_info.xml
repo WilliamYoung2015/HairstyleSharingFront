@@ -27,13 +27,14 @@
         android:paddingHorizontal="8dp"
         android:background="@android:color/white">
 
-        <ImageView
+        <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/item_avatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
             android:contentDescription="@string/avatar"
             android:layout_marginEnd="16dp"
+            app:roundPercent="1"
             android:background="@drawable/circle_shape" />
 
         <LinearLayout

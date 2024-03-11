@@ -117,8 +117,7 @@ class AddHairStyleActivity: AppCompatActivity() {
             params["age"] = textAge
             params["sex"] = selSex
             params["tags"] = strTags
-            val addHairStyleRequest = AddHairStyleRequest(desc, selSeason, strTags, "")
-            viewModel.addHairStyle(addHairStyleRequest, params, arrayListOf(mImageFile!!))
+            viewModel.addHairStyle(params, arrayListOf(mImageFile!!))
         }
         initData()
         initTags()
