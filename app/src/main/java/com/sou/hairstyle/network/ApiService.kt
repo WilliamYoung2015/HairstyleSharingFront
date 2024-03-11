@@ -1,6 +1,6 @@
 package com.sou.hairstyle.network
 
-import com.sou.hairstyle.network.Request.AddHairStyleRequest
+import com.sou.hairstyle.network.Request.FavoriteRequest
 import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
@@ -9,13 +9,12 @@ import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Response.AddHairStyleResponse
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
-import com.sou.hairstyle.network.Response.ResetPasswordResponse
+import com.sou.hairstyle.network.Response.CommonResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.http.GET
 import retrofit2.Call
 import retrofit2.http.Body
@@ -24,6 +23,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface ApiService {
     @GET("hairstyle/list")
@@ -53,7 +53,13 @@ interface ApiService {
     @POST("user/reset_password")
     fun resetPassword(
         @Body resetPasswordRequest: ResetPasswordRequest
-    ): Call<ResetPasswordResponse>
+    ): Call<CommonResponse>
+
+    @PUT("favorite")
+    fun favorite(
+        @Query("action") action: String,
+        @Query("hairstyle_ids") hairstyleIds: Int
+    ): Call<CommonResponse>
 
     @Multipart
     @PUT("user")
@@ -68,7 +74,7 @@ interface ApiService {
 
 
     @Multipart
-    @PUT("/hairstyle")
+    @PUT("hairstyle")
     fun addHairStyle(
         @Part partList: List<MultipartBody.Part>,
     ): Call<AddHairStyleResponse>

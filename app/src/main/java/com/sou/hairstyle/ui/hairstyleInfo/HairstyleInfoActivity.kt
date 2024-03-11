@@ -1,17 +1,18 @@
 package com.sou.hairstyle.ui.hairstyleInfo
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.ImageLoader
 import com.sou.hairstyle.databinding.ActivityHairstyleInfoBinding
-import com.sou.hairstyle.databinding.ActivitySettingBinding
 import com.sou.hairstyle.ui.home.HairInfoItem
+import com.sou.hairstyle.ui.home.HomeFragment
 
 class HairstyleInfoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHairstyleInfoBinding
@@ -28,11 +29,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
         val itemJson = intent.getStringExtra("HAIR_INFO_ITEM_JSON")
         val item = Gson().fromJson(itemJson, HairInfoItem::class.java)
 
-        binding.imgLarge.let {
-            Glide.with(this)
-                .load(item.imageUrl)
-                .into(it)
-        }
+        ImageLoader.loadImage(this, item.imageUrl, binding.imgLarge)
 
         binding.txtCommentCount.text = getString(R.string.comment_count_format, item.comment_count)
         binding.txtLikeCount.text = item.star_sum.toString()
@@ -60,11 +57,10 @@ class HairstyleInfoActivity : AppCompatActivity() {
     private fun setHeartIcon(isLiked: Boolean) {
         binding.imgHeart.setImageResource(if (isLiked) R.drawable.heart_solid else R.drawable.heart_outline)
     }
-    fun back(){
-        val returnIntent = Intent()
-        // Put extras if needed
-        // returnIntent.putExtra("RESULT_KEY", resultData)
-        setResult(Activity.RESULT_OK, returnIntent)
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(HomeFragment.HAIRSTYLE_INFO_REQUEST_CODE))
         finish()
     }
 
@@ -73,6 +69,17 @@ class HairstyleInfoActivity : AppCompatActivity() {
         binding.recyclerViewComments.apply {
             layoutManager = LinearLayoutManager(this@HairstyleInfoActivity)
             adapter = this@HairstyleInfoActivity.adapter
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                // 当点击返回按钮时，结束当前活动
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

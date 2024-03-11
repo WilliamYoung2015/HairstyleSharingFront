@@ -1,7 +1,6 @@
 package com.sou.hairstyle.network
 
 import com.sou.hairstyle.common.FileUtil
-import com.sou.hairstyle.network.Request.AddHairStyleRequest
 import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
@@ -10,14 +9,12 @@ import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Response.AddHairStyleResponse
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
-import com.sou.hairstyle.network.Response.ResetPasswordResponse
+import com.sou.hairstyle.network.Response.CommonResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import com.sou.hairstyle.ui.home.HairInfoResponse
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import java.io.File
@@ -69,7 +66,7 @@ object HairstyleRepository {
         smsNo: String,
         smsCode: String,
         password: String,
-    ): Call<ResetPasswordResponse> {
+    ): Call<CommonResponse> {
         val resetPasswordRequest = ResetPasswordRequest(phone, smsNo, smsCode, password)
         return apiService.resetPassword(resetPasswordRequest)
     }
@@ -136,5 +133,9 @@ object HairstyleRepository {
             }
         }
         return apiService.addHairStyle(partList)
+    }
+
+    fun favorite(action: String, hairstyleIds: Int): Call<CommonResponse> {
+        return apiService.favorite(action, hairstyleIds)
     }
 }

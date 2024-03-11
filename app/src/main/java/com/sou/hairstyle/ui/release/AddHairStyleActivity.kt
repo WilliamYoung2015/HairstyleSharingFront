@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sou.hairstyle.R
 import com.sou.hairstyle.imaging.IMGEditActivity
 import com.sou.hairstyle.imaging.IMGGalleryActivity
@@ -29,6 +30,7 @@ import com.sou.hairstyle.imaging.gallery.model.IMGChooseMode
 import com.sou.hairstyle.imaging.gallery.model.IMGImageInfo
 import com.sou.hairstyle.network.Request.AddHairStyleRequest
 import com.sou.hairstyle.network.Resource
+import com.sou.hairstyle.ui.home.HomeFragment
 import com.sou.hairstyle.widget.FlowLayout
 import java.io.File
 import java.util.UUID
@@ -64,8 +66,8 @@ class AddHairStyleActivity: AppCompatActivity() {
 
                 }
                 is Resource.Success -> {
-                    println(it.data)
                     Toast.makeText(this, "发布成功", Toast.LENGTH_LONG).show()
+                    onBackPressed()
                 }
                 is Resource.Error -> {
                     // 显示错误信息
@@ -263,11 +265,16 @@ class AddHairStyleActivity: AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(HomeFragment.HAIRSTYLE_INFO_REQUEST_CODE))
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 // 当点击返回按钮时，结束当前活动
-                finish()
+                onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)

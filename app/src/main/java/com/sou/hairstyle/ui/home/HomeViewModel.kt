@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sou.hairstyle.network.HairstyleRepository
+import com.sou.hairstyle.network.Resource
+import com.sou.hairstyle.network.Response.CommonResponse
+import com.sou.hairstyle.network.Response.UserUpdateResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,7 +47,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun initData(){
-        loadTestData()
+        fetchHairstyles()
     }
 
 
@@ -215,5 +218,29 @@ class HomeViewModel : ViewModel() {
 
         var hairInfoList = dataFormat(hairstyles)
         _hairInfoItems.value = hairInfoList
+    }
+
+    fun favorite(action: String, hairstyleIds: Int, result: (success: Boolean)-> Unit){
+        HairstyleRepository.favorite(action, hairstyleIds).enqueue(object : Callback<CommonResponse> {
+            override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
+                if (response.isSuccessful && response.body() != null) {
+                    if(response.body()?.code != 1){
+                        result.invoke(false)
+                    }else
+                    {
+                        result.invoke(true)
+                    }
+
+                } else {
+                    // 处理错误响应
+                    result.invoke(false)
+                }
+            }
+
+            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                // 网络请求失败
+                result.invoke(false)
+            }
+        })
     }
 }

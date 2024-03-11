@@ -32,12 +32,12 @@
         android:id="@+id/profileImagesBar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@id/imgLargeParent"
+        android:layout_alignTop="@+id/recyclerViewComments"
         android:background="@drawable/rounded_bar"
         android:orientation="horizontal"
         android:padding="8dp"
         android:gravity="center_vertical"
-        android:layout_marginTop="-50dp">
+        android:layout_marginTop="-60dp">
 
         <!-- Comment count -->
         <TextView
@@ -86,8 +86,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewComments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/profileImagesBar"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:scrollbars="vertical"/>
 

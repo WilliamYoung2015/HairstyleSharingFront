@@ -4,13 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Resource
-import com.sou.hairstyle.network.Response.ResetPasswordResponse
 import com.sou.hairstyle.network.Response.User
 import com.sou.hairstyle.network.Response.UserUpdateResponse
 import kotlinx.coroutines.launch

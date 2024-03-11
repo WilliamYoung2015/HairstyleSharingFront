@@ -11,6 +11,7 @@ import com.sou.hairstyle.R
 import com.sou.hairstyle.common.ImageLoader
 
 class HairInfoAdapter(var items: List<HairInfoItem>,
+                      private val homeViewModel: HomeViewModel,
                       private var showFooter: Boolean,
                       private val onItemClicked: (HairInfoItem) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -74,10 +75,20 @@ class HairInfoAdapter(var items: List<HairInfoItem>,
 
             // Set up a click listener for the like button
             holder.likeButton.setOnClickListener {
-                // Update the isLiked status
-                item.isLiked = !item.isLiked
-                item.star_sum += if (item.isLiked) 1 else -1
-                notifyItemChanged(position)
+                item.id.toIntOrNull()?.let { intId ->
+//                    val params = mapOf(Pair("action", if (item.isLiked) "unbind" else "bind"),
+//                        Pair("hairstyle_ids", intId)
+//                    )
+//                    val ids = IntArray(intId)
+                    homeViewModel.favorite(if (item.isLiked) "unbind" else "bind", intId) {
+                        if (it){
+                            // Update the isLiked status
+                            item.isLiked = !item.isLiked
+                            item.star_sum += if (item.isLiked) 1 else -1
+                            notifyItemChanged(position)
+                        }
+                    }
+                }
             }
 
             // You might want to add a click listener to the whole item view as well

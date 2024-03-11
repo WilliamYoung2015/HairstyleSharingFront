@@ -1,19 +1,23 @@
 package com.sou.hairstyle.ui.home
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.sou.hairstyle.databinding.FragmentHomeBinding
 import com.sou.hairstyle.ui.hairstyleInfo.HairstyleInfoActivity
+
 
 class HomeFragment : Fragment() {
 
@@ -25,7 +29,16 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     companion object {
-        private const val HAIRSTYLE_INFO_REQUEST_CODE = 1
+        const val HAIRSTYLE_INFO_REQUEST_CODE = "HomeFragment_refresh_data"
+    }
+
+    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == HAIRSTYLE_INFO_REQUEST_CODE) {
+                // 这里执行刷新Fragment的操作
+                homeViewModel.initData()
+            }
+        }
     }
 
 
@@ -39,14 +52,18 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val adapter = HairInfoAdapter(emptyList(),false){ item ->
+        context?.let {
+            LocalBroadcastManager.getInstance(it).registerReceiver(receiver,
+                IntentFilter(HAIRSTYLE_INFO_REQUEST_CODE)
+            )
+        }
+        val adapter = HairInfoAdapter(emptyList(), homeViewModel, false){ item ->
             val gson = Gson()
             val itemJson = gson.toJson(item)
             val intent = Intent(activity, HairstyleInfoActivity::class.java).apply {
                 putExtra("HAIR_INFO_ITEM_JSON", itemJson) // Pass the JSON string
             }
-            startActivityForResult(intent, HAIRSTYLE_INFO_REQUEST_CODE)
+            startActivity(intent)
         }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -73,7 +90,7 @@ class HomeFragment : Fragment() {
             adapter.notifyDataSetChanged()
         }
 
-        homeViewModel.fetchHairstyles(1,20);
+        homeViewModel.fetchHairstyles(1,20)
 //        val textView: TextView = binding.textHome
 //        homeViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
@@ -81,18 +98,9 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == HAIRSTYLE_INFO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // Handle the result, such as refreshing data
-            // If using a ViewModel, trigger a data refresh here
-            homeViewModel.initData() // Example method call to refresh data
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        context?.let { LocalBroadcastManager.getInstance(it).unregisterReceiver(receiver) }
     }
 }

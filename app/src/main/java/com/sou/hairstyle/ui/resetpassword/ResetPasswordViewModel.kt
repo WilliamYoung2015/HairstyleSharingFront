@@ -7,15 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Resource
-import com.sou.hairstyle.network.Response.ResetPasswordResponse
+import com.sou.hairstyle.network.Response.CommonResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
 
 class ResetPasswordViewModel : ViewModel() {
 
-    private val _resetPasswordStatus = MutableLiveData<Resource<ResetPasswordResponse>>()
-    val resetPasswordStatus: LiveData<Resource<ResetPasswordResponse>> = _resetPasswordStatus
+    private val _resetPasswordStatus = MutableLiveData<Resource<CommonResponse>>()
+    val resetPasswordStatus: LiveData<Resource<CommonResponse>> = _resetPasswordStatus
 
     private val _smsStatus = MutableLiveData<Resource<SmsCodeResponse>>()
     val smsStatus: LiveData<Resource<SmsCodeResponse>> = _smsStatus
@@ -59,8 +59,8 @@ class ResetPasswordViewModel : ViewModel() {
     fun resetPassowrd(phone: String, smsNo: String,smsCode: String, password: String) {
         viewModelScope.launch {
             _resetPasswordStatus.value = Resource.Loading() // 设置加载状态
-            HairstyleRepository.resetPassword(phone, smsNo, smsCode, password).enqueue(object : retrofit2.Callback<ResetPasswordResponse> {
-                override fun onResponse(call: Call<ResetPasswordResponse>, response: retrofit2.Response<ResetPasswordResponse>) {
+            HairstyleRepository.resetPassword(phone, smsNo, smsCode, password).enqueue(object : retrofit2.Callback<CommonResponse> {
+                override fun onResponse(call: Call<CommonResponse>, response: retrofit2.Response<CommonResponse>) {
                     if (response.isSuccessful && response.body() != null) {
                         println("response.body():"+response.body())
                         if(response.body()?.code != 1){
@@ -78,7 +78,7 @@ class ResetPasswordViewModel : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<ResetPasswordResponse>, t: Throwable) {
+                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                     // 网络请求失败
                     _resetPasswordStatus.postValue(Resource.Error("Network error: ${t.localizedMessage}"))
                 }
