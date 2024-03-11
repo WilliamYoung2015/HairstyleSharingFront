@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:background="@color/black">
 
@@ -31,7 +32,7 @@
             android:background="#80FF0000"  />
 
         <!-- 头像图片 -->
-        <ImageView
+        <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/avatar_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -40,9 +41,19 @@
             android:layout_marginTop="-75dp"
             android:src="@android:drawable/ic_menu_gallery"
             android:scaleType="centerCrop"
-            android:background="@drawable/circle_mask"
-            android:padding="2dp"
-            android:elevation="4dp" />
+            app:roundPercent="1" />
+
+
+        <View
+            android:id="@+id/v_avatar_stroke"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_circle_stroke_2_avatar_white"
+            android:layout_alignTop="@+id/avatar_image"
+            android:layout_alignStart="@+id/avatar_image"
+            android:layout_alignBottom="@+id/avatar_image"
+            android:layout_alignEnd="@+id/avatar_image"
+            android:elevation="2dp"/>
 
         <!-- 设置按钮 -->
         <ImageButton
