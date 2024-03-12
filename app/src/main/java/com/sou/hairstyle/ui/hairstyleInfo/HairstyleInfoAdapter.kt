@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sou.hairstyle.common.ImageLoader
 import com.sou.hairstyle.databinding.CommentItemBinding
 
 class HairstyleInfoAdapter : ListAdapter<CommentItem, HairstyleInfoAdapter.CommentViewHolder>(DiffCallback()) {
@@ -25,6 +26,9 @@ class HairstyleInfoAdapter : ListAdapter<CommentItem, HairstyleInfoAdapter.Comme
                 textViewNickname.text = comment.username
                 textViewComment.text = comment.content
                 // imageViewProfile should be loaded with comment.userProfileImageUrl
+                imageViewProfile.setImageDrawable(null)
+
+                ImageLoader.loadImage(imageViewProfile.context, comment.userProfileImageUrl, imageViewProfile)
             }
         }
     }
