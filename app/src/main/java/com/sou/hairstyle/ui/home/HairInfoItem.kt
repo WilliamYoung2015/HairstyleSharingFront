@@ -13,7 +13,7 @@ data class HairInfoItem(
 )
 
 
-data class HairInfoResponse(
+data class HairInfoListResponse(
     val code: Int,
     val message: String,
     val data: Data

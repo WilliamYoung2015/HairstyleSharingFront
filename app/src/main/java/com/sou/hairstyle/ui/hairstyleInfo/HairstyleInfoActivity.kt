@@ -3,9 +3,7 @@ package com.sou.hairstyle.ui.hairstyleInfo
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -22,6 +20,7 @@ import com.sou.hairstyle.ui.home.HairInfoItem
 import com.sou.hairstyle.ui.home.HomeFragment
 
 class HairstyleInfoActivity : AppCompatActivity() {
+    private lateinit var hairStyleId: String
     private lateinit var binding: ActivityHairstyleInfoBinding
     private val viewModel: HairstyleInfoViewModel by viewModels()
     private lateinit var adapter: HairstyleInfoAdapter
@@ -36,16 +35,24 @@ class HairstyleInfoActivity : AppCompatActivity() {
         val itemJson = intent.getStringExtra("HAIR_INFO_ITEM_JSON")
         val item = Gson().fromJson(itemJson, HairInfoItem::class.java)
 
+        hairStyleId = item.id
         ImageLoader.loadImage(this, item.imageUrl, binding.imgLarge)
 
-        binding.txtCommentCount.text = getString(R.string.comment_count_format, item.comment_count)
-        binding.txtLikeCount.text = item.star_sum.toString()
-        setHeartIcon(item.isLiked)
+
 
         setupRecyclerView()
+
+        viewModel.hairInfo.observe(this) { hairInfo ->
+            binding.txtCommentCount.text = getString(R.string.comment_count_format, hairInfo.comment_count)
+            binding.txtLikeCount.text = hairInfo.star_sum.toString()
+//            setHeartIcon(hairInfo.isLiked)
+        }
+
         viewModel.comments.observe(this) { comments ->
             adapter.submitList(comments)
         }
+        viewModel.getCurrentHairStyleInfo(hairStyleId)
+        viewModel.fetchComments(1,20,hairStyleId)
 
         binding.imgHeart.setOnClickListener {
             item.isLiked = !item.isLiked
@@ -64,7 +71,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
     }
 
     private fun setHeartIcon(isLiked: Boolean) {
-        binding.imgHeart.setImageResource(if (isLiked) R.drawable.heart_solid else R.drawable.heart_outline)
+        binding.imgHeart.setImageResource(if (isLiked) R.drawable.stared else R.drawable.star)
     }
 
     override fun onBackPressed() {
@@ -123,10 +130,15 @@ class HairstyleInfoActivity : AppCompatActivity() {
             val editTextComment = dialogView.findViewById<EditText>(R.id.editTextComment)
             val comment = editTextComment.text.toString()
             // TODO: 逻辑处理
+            viewModel.addComment(comment, hairStyleId) {
+                if (it) {
+                    viewModel.getCurrentHairStyleInfo(hairStyleId)
+                    viewModel.fetchComments(1, 20, hairStyleId)
+                }
 
 
-
-            alertDialog.dismiss()
+                alertDialog.dismiss()
+            }
         }
     }
 }

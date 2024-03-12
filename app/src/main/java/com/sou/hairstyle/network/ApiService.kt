@@ -1,19 +1,21 @@
 package com.sou.hairstyle.network
 
-import com.sou.hairstyle.network.Request.FavoriteRequest
 import com.sou.hairstyle.network.Request.LoginRequest
 import com.sou.hairstyle.network.Request.RegisterRequest
 import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
 import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Response.AddHairStyleResponse
+import com.sou.hairstyle.network.Response.CommentListResponse
+import com.sou.hairstyle.network.Response.CommentResponse
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.CommonResponse
+import com.sou.hairstyle.network.Response.HairInfoResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.Response.UserUpdateResponse
-import com.sou.hairstyle.ui.home.HairInfoResponse
+import com.sou.hairstyle.ui.home.HairInfoListResponse
 import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.Call
@@ -23,26 +25,35 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
 
 interface ApiService {
+
+    @GET("hairstyle")
+    fun getHairStyleInfoData(
+        @Query("id") hairstyleId: String): Call<HairInfoResponse>
+
     @GET("hairstyle/list")
     fun getHairInfosData(
         @Query("page") page: Int,
-        @Query("pagesize") pageSize: Int): Call<HairInfoResponse>
+        @Query("pagesize") pageSize: Int): Call<HairInfoListResponse>
 
     @GET("hairstyle/plaza")
     fun getHairStylePlazaData(
         @Query("page") page: Int,
-        @Query("pagesize") pageSize: Int): Call<HairInfoResponse>
+        @Query("pagesize") pageSize: Int): Call<HairInfoListResponse>
 
     @GET("comment/list")
     fun getCommentListData(
         @Query("page") page: Int,
         @Query("pagesize") pageSize: Int,
-        @Query("hairstyle_id") hairstyleId: Int): Call<HairInfoResponse>
+        @Query("hairstyle_id") hairstyleId: String
+    ): Call<CommentListResponse>
 
-
+    @PUT("comment")
+    fun addComment(
+        @Query("comment") comment: String,
+        @Query("hairstyle_id") hairstyleIds: String
+    ): Call<CommentResponse>
 
     @GET("token")
     fun getToken(): Call<TokenResponse>

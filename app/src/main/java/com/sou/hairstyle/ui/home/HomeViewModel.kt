@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sou.hairstyle.network.HairstyleRepository
-import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.network.Response.CommonResponse
-import com.sou.hairstyle.network.Response.UserUpdateResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,7 +13,7 @@ import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
 
-    private val _hairInfoResponse = MutableLiveData<HairInfoResponse>()
+    private val _hairInfoResponse = MutableLiveData<HairInfoListResponse>()
 
     private val _hairInfoItems = MutableLiveData<List<HairInfoItem>>()
     val hairInfoItems: LiveData<List<HairInfoItem>> = _hairInfoItems
@@ -25,8 +23,8 @@ class HomeViewModel : ViewModel() {
 
     fun fetchHairstyles(page: Int = 1, pageSize: Int = 20) {
         println("_hairInfoItems start")
-        HairstyleRepository.getHairStylePlaza(page, pageSize).enqueue(object : Callback<HairInfoResponse> {
-            override fun onResponse(call: Call<HairInfoResponse>, response: Response<HairInfoResponse>) {
+        HairstyleRepository.getHairStylePlaza(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
+            override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
                 println("_hairInfoItems code:"+response)
                 if (response.isSuccessful) {
                     _hairInfoResponse.postValue(response.body())
@@ -35,7 +33,7 @@ class HomeViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<HairInfoResponse>, t: Throwable) {
+            override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
                 // 处理失败的情况
             }
         })

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sou.hairstyle.databinding.CommentItemBinding
 
-class HairstyleInfoAdapter : ListAdapter<Comment, HairstyleInfoAdapter.CommentViewHolder>(DiffCallback()) {
+class HairstyleInfoAdapter : ListAdapter<CommentItem, HairstyleInfoAdapter.CommentViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val binding = CommentItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,7 +19,7 @@ class HairstyleInfoAdapter : ListAdapter<Comment, HairstyleInfoAdapter.CommentVi
     }
 
     class CommentViewHolder(private val binding: CommentItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(comment: Comment) {
+        fun bind(comment: CommentItem) {
             binding.apply {
                 // Use Glide or another image loading library to load the user profile image
                 textViewNickname.text = comment.username
@@ -29,12 +29,12 @@ class HairstyleInfoAdapter : ListAdapter<Comment, HairstyleInfoAdapter.CommentVi
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Comment>() {
-        override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<CommentItem>() {
+        override fun areItemsTheSame(oldItem: CommentItem, newItem: CommentItem): Boolean {
             return oldItem.username == newItem.username // Assuming username is unique
         }
 
-        override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {
+        override fun areContentsTheSame(oldItem: CommentItem, newItem: CommentItem): Boolean {
             return oldItem == newItem
         }
     }
