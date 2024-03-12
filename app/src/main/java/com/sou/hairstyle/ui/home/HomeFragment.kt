@@ -60,6 +60,8 @@ class HomeFragment : Fragment() {
         val adapter = HairInfoAdapter(emptyList(), homeViewModel, false){ item ->
             val gson = Gson()
             val itemJson = gson.toJson(item)
+            println("click hair style ~~~~~~~~~~~~~~~~")
+            println(itemJson)
             val intent = Intent(activity, HairstyleInfoActivity::class.java).apply {
                 putExtra("HAIR_INFO_ITEM_JSON", itemJson) // Pass the JSON string
             }

@@ -29,6 +29,10 @@ object HairstyleRepository {
         return apiService.getHairInfosData(page, pageSize)
     }
 
+    fun getHairStylePlaza(page: Int, pageSize: Int): Call<HairInfoResponse> {
+        return apiService.getHairStylePlazaData(page, pageSize)
+    }
+
     fun getToken(): Call<TokenResponse> {
         return apiService.getToken()
     }
