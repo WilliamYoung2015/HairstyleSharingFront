@@ -7,13 +7,16 @@ import com.sou.hairstyle.network.Request.ResetPasswordRequest
 import com.sou.hairstyle.network.Request.SmsCodeRequest
 import com.sou.hairstyle.network.Request.UpdateUserRequest
 import com.sou.hairstyle.network.Response.AddHairStyleResponse
+import com.sou.hairstyle.network.Response.CommentListResponse
+import com.sou.hairstyle.network.Response.CommentResponse
 import com.sou.hairstyle.network.Response.LoginResponse
 import com.sou.hairstyle.network.Response.RegisterResponse
 import com.sou.hairstyle.network.Response.CommonResponse
+import com.sou.hairstyle.network.Response.HairInfoResponse
 import com.sou.hairstyle.network.Response.SmsCodeResponse
 import com.sou.hairstyle.network.Response.TokenResponse
 import com.sou.hairstyle.network.Response.UserUpdateResponse
-import com.sou.hairstyle.ui.home.HairInfoResponse
+import com.sou.hairstyle.ui.home.HairInfoListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
@@ -25,12 +28,24 @@ object HairstyleRepository {
         RetrofitClient.instance.create(ApiService::class.java)
     }
 
-    fun getHairstyles(page: Int, pageSize: Int): Call<HairInfoResponse> {
+    fun getHairStyleInfo(hairstyleId: String): Call<HairInfoResponse> {
+        return apiService.getHairStyleInfoData(hairstyleId)
+    }
+
+    fun getHairstyles(page: Int, pageSize: Int): Call<HairInfoListResponse> {
         return apiService.getHairInfosData(page, pageSize)
     }
 
-    fun getHairStylePlaza(page: Int, pageSize: Int): Call<HairInfoResponse> {
+    fun getHairStylePlaza(page: Int, pageSize: Int): Call<HairInfoListResponse> {
         return apiService.getHairStylePlazaData(page, pageSize)
+    }
+
+    fun getCommentList(page: Int, pageSize: Int, hairstyleId: String): Call<CommentListResponse> {
+        return apiService.getCommentListData(page, pageSize, hairstyleId)
+    }
+
+    fun addComment(comment: String, hairstyleIds: String): Call<CommentResponse> {
+        return apiService.addComment(comment, hairstyleIds)
     }
 
     fun getToken(): Call<TokenResponse> {

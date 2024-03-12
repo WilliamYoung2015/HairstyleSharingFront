@@ -32,12 +32,12 @@
         android:id="@+id/profileImagesBar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignTop="@+id/recyclerViewComments"
+        android:layout_alignBottom="@+id/imgLargeParent"
         android:background="@drawable/rounded_bar"
         android:orientation="horizontal"
         android:padding="8dp"
         android:gravity="center_vertical"
-        android:layout_marginTop="-60dp">
+        android:layout_marginBottom="-40dp">
 
         <!-- Comment count -->
         <TextView
@@ -74,7 +74,7 @@
                 android:id="@+id/imgHeart"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/heart_solid"
+                android:src="@drawable/stared"
                 android:clickable="true"
                 android:focusable="true" />
         </LinearLayout>
@@ -86,9 +86,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewComments"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/profileImagesBar"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="60dp"
         android:scrollbars="vertical"/>
 
     <!-- 添加评论按钮 -->
