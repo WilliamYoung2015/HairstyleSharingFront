@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sou.hairstyle.common.SharedPreferencesManager
+import com.sou.hairstyle.common.dp
 import com.sou.hairstyle.databinding.ActivityMainBinding
 import com.sou.hairstyle.ui.userInfo.UserInfoFragment
 import com.sou.hairstyle.ui.release.AddHairStyleActivity
@@ -31,7 +32,9 @@ class MainActivity : AppCompatActivity(), UserInfoFragment.FragmentUserInfoListe
 
         val navView: BottomNavigationView = binding.navView
 
+//        val colorStateList = ContextCompat.getColorStateList(this, R.color.navigation_item_color)
         val colorStateList = ContextCompat.getColorStateList(this, R.color.navigation_item_color)
+//        navView.itemIconSize = 54.dp
         navView.itemIconTintList = colorStateList
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
