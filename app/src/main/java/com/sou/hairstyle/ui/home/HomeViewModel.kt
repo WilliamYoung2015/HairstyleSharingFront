@@ -25,12 +25,12 @@ class HomeViewModel : ViewModel() {
 
     fun fetchHairstyles(page: Int = 1, pageSize: Int = 20) {
         println("_hairInfoItems start")
-        HairstyleRepository.getHairstyles(page, pageSize).enqueue(object : Callback<HairInfoResponse> {
+        HairstyleRepository.getHairStylePlaza(page, pageSize).enqueue(object : Callback<HairInfoResponse> {
             override fun onResponse(call: Call<HairInfoResponse>, response: Response<HairInfoResponse>) {
                 println("_hairInfoItems code:"+response)
                 if (response.isSuccessful) {
                     _hairInfoResponse.postValue(response.body())
-//                    _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
+                    _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
                     println("_hairInfoItems:"+response.body())
                 }
             }
