@@ -36,6 +36,13 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("pagesize") pageSize: Int): Call<HairInfoResponse>
 
+    @GET("comment/list")
+    fun getCommentListData(
+        @Query("page") page: Int,
+        @Query("pagesize") pageSize: Int,
+        @Query("hairstyle_id") hairstyleId: Int): Call<HairInfoResponse>
+
+
 
     @GET("token")
     fun getToken(): Call<TokenResponse>

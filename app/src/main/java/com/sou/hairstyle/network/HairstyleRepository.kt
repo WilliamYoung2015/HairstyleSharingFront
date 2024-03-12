@@ -33,6 +33,10 @@ object HairstyleRepository {
         return apiService.getHairStylePlazaData(page, pageSize)
     }
 
+    fun getCommentList(page: Int, pageSize: Int,hairstyleId:Int): Call<HairInfoResponse> {
+        return apiService.getCommentListData(page, pageSize, hairstyleId)
+    }
+
     fun getToken(): Call<TokenResponse> {
         return apiService.getToken()
     }
