@@ -159,10 +159,11 @@ class AddHairStyleActivity: AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                selSex = if (position == 0 || position >= sexArr.size){
-                    ""
-                } else {
-                    sexArr[position]
+                selSex = when(position) {
+                    1 -> "Male"
+                    2 -> "Female"
+                    3 -> "Other"
+                    else -> ""
                 }
             }
 

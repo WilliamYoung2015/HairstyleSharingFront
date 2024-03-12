@@ -54,7 +54,8 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/edit_background"
-                android:paddingHorizontal="4dp"
+                android:popupBackground="#00000000"
+                android:paddingHorizontal="1dp"
                 tools:listitem="请选择季节"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -90,7 +91,8 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/edit_background"
-                android:paddingHorizontal="4dp"
+                android:popupBackground="#00000000"
+                android:paddingHorizontal="1dp"
                 tools:listitem="请选择性别"/>
             <TextView
                 android:layout_width="wrap_content"
