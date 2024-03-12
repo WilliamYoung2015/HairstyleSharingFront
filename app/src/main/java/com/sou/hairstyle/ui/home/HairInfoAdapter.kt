@@ -57,6 +57,7 @@ class HairInfoAdapter(var items: List<HairInfoItem>,
 //                .placeholder(android.R.drawable.ic_menu_gallery)
 //                .error(android.R.drawable.ic_delete)
 //                .into(holder.imageView)
+            holder.imageView.setImageDrawable(null)
             ImageLoader.loadImage(holder.imageView.context, item.imageUrl, holder.imageView)
 
 //            Glide.with(holder.avatarView.context)
@@ -65,6 +66,7 @@ class HairInfoAdapter(var items: List<HairInfoItem>,
 //                .placeholder(android.R.drawable.ic_menu_gallery)
 //                .error(android.R.drawable.ic_delete)
 //                .into(holder.avatarView)
+            holder.avatarView.setImageDrawable(null)
             ImageLoader.loadImage(holder.avatarView.context, item.avatarUrl, holder.avatarView)
 
             holder.titleView.text = item.title
