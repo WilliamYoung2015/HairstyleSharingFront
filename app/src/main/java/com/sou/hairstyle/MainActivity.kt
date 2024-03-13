@@ -1,7 +1,10 @@
 package com.sou.hairstyle
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity(), UserInfoFragment.FragmentUserInfoListe
         Fresco.initialize(applicationContext)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.BLACK
         sharedPreferencesManager = SharedPreferencesManager.getInstance(this)
 
         val navView: BottomNavigationView = binding.navView

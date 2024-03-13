@@ -40,6 +40,10 @@ object HairstyleRepository {
         return apiService.getHairStylePlazaData(page, pageSize)
     }
 
+    fun getHairStylePlazaWithTag(tag: String, page: Int, pageSize: Int): Call<HairInfoListResponse> {
+        return apiService.getHairStylePlazaDataWithTag(tag, page, pageSize)
+    }
+
     fun getCommentList(page: Int, pageSize: Int, hairstyleId: String): Call<CommentListResponse> {
         return apiService.getCommentListData(page, pageSize, hairstyleId)
     }

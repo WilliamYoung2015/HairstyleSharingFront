@@ -39,6 +39,24 @@ class HomeViewModel : ViewModel() {
         })
     }
 
+    fun searchHairstyles(tag: String, page: Int = 1, pageSize: Int = 20) {
+        println("_hairInfoItems start")
+        HairstyleRepository.getHairStylePlazaWithTag(tag, page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
+            override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
+                println("_hairInfoItems code:"+response)
+                if (response.isSuccessful) {
+                    _hairInfoResponse.postValue(response.body())
+                    _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
+                    println("_hairInfoItems:"+response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
+                // 处理失败的情况
+            }
+        })
+    }
+
     init {
         initData()
 
