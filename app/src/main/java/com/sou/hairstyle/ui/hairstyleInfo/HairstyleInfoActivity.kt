@@ -18,11 +18,14 @@ import com.sou.hairstyle.common.ImageLoader
 import com.sou.hairstyle.databinding.ActivityHairstyleInfoBinding
 import com.sou.hairstyle.ui.home.HairInfoItem
 import com.sou.hairstyle.ui.home.HomeFragment
+import com.sou.hairstyle.ui.home.HomeViewModel
+import com.sou.hairstyle.widget.LoadMoreLinearLayoutRecyclerView
 
 class HairstyleInfoActivity : AppCompatActivity() {
     private lateinit var hairStyleId: String
     private lateinit var binding: ActivityHairstyleInfoBinding
     private val viewModel: HairstyleInfoViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var adapter: HairstyleInfoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +33,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
         binding = ActivityHairstyleInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setTitle(R.string.hair_style_detail);
+        setTitle(R.string.hair_style_detail)
 
         val itemJson = intent.getStringExtra("HAIR_INFO_ITEM_JSON")
         val item = Gson().fromJson(itemJson, HairInfoItem::class.java)
@@ -45,7 +48,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
         viewModel.hairInfo.observe(this) { hairInfo ->
             binding.txtCommentCount.text = getString(R.string.comment_count_format, hairInfo.comment_count)
             binding.txtLikeCount.text = hairInfo.star_sum.toString()
-//            setHeartIcon(hairInfo.isLiked)
+            setHeartIcon(hairInfo.isLiked)
         }
 
         viewModel.comments.observe(this) { comments ->
@@ -55,12 +58,17 @@ class HairstyleInfoActivity : AppCompatActivity() {
         viewModel.fetchComments(1,20,hairStyleId)
 
         binding.imgHeart.setOnClickListener {
-            item.isLiked = !item.isLiked
-            setHeartIcon(item.isLiked)
-            // Update the like count accordingly
-            item.star_sum += if (item.isLiked) 1 else -1
-            binding.txtLikeCount.text = item.star_sum.toString()
-            // TODO: Update the like status on the server or local database
+            hairStyleId.toIntOrNull()?.let { intId ->
+                homeViewModel.favorite(if (item.isLiked) "unbind" else "bind", intId) {
+                    if (it) {
+                        item.isLiked = !item.isLiked
+                        setHeartIcon(item.isLiked)
+                        // Update the like count accordingly
+                        item.star_sum += if (item.isLiked) 1 else -1
+                        binding.txtLikeCount.text = item.star_sum.toString()
+                    }
+                }
+            }
         }
 
         binding.buttonAddComment.setOnClickListener {
@@ -76,7 +84,9 @@ class HairstyleInfoActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(HomeFragment.HAIRSTYLE_INFO_REQUEST_CODE))
+        val intent = Intent(HomeFragment.HAIRSTYLE_INFO_REQUEST_CODE)
+        intent.putExtra("styleId", hairStyleId)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         finish()
     }
 
@@ -85,6 +95,9 @@ class HairstyleInfoActivity : AppCompatActivity() {
         binding.recyclerViewComments.apply {
             layoutManager = LinearLayoutManager(this@HairstyleInfoActivity)
             adapter = this@HairstyleInfoActivity.adapter
+            addLoadMoreListener {
+                setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOADING)
+            }
         }
     }
 

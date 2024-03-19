@@ -31,6 +31,7 @@ data class Hairstyle(
     val desc: String,
     val tags: String, // 如果tags是以逗号分隔的，可能需要转换为List<String>
     val star_sum: Int,
+    var isLiked: Boolean,
     val comment_count: Int,
     val favorite_count: Int,
     val created_at: String,

@@ -118,6 +118,16 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
         notifyItemRangeChanged(startNotify, moreData.size)
     }
 
+    fun notifyById(styleId: String, isLike: Boolean){
+        items.forEachIndexed { index, hairInfoItem ->
+            if (hairInfoItem.id == styleId){
+                hairInfoItem.isLiked = isLike
+                notifyItemChanged(index)
+                return@forEachIndexed
+            }
+        }
+    }
+
     override fun getItemCount(): Int {
         return if (showFooter) items.size + 1 else items.size
     }

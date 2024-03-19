@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.PublicData
 import com.sou.hairstyle.databinding.FragmentHomeBinding
 import com.sou.hairstyle.ui.hairstyleInfo.HairstyleInfoActivity
 import com.sou.hairstyle.widget.LoadMoreLinearLayoutRecyclerView
@@ -42,7 +43,12 @@ class HomeFragment : Fragment() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == HAIRSTYLE_INFO_REQUEST_CODE) {
                 // 这里执行刷新Fragment的操作
-                homeViewModel.initData()
+                val styleId = intent.getStringExtra("styleId")
+                if (!styleId.isNullOrEmpty()) {
+                    styleId.toIntOrNull()?.let {
+                        hairInfoAdapter.notifyById(styleId, PublicData.getFavoriteStatus(it))
+                    }
+                }
             }
         }
     }

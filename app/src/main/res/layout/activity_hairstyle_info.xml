@@ -83,7 +83,7 @@
     </LinearLayout>
 
     <!-- 评论列表 -->
-    <androidx.recyclerview.widget.RecyclerView
+    <com.sou.hairstyle.widget.LoadMoreLinearLayoutRecyclerView
         android:id="@+id/recyclerViewComments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

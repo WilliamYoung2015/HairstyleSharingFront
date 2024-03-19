@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sou.hairstyle.common.PublicData
 import com.sou.hairstyle.network.HairstyleRepository
 import com.sou.hairstyle.network.Response.CommonResponse
 import kotlinx.coroutines.launch
@@ -21,7 +22,6 @@ class HomeViewModel : ViewModel() {
     private val _hasMoreData = MutableLiveData<Boolean>(true)
     val hasMoreData: LiveData<Boolean> = _hasMoreData
 
-    private val _favoriteIdData = ArrayList<Int>()  //保存收藏的发型id
     private var curPage = 1
 
     fun fetchHairstyles(page: Int = 1, pageSize: Int = 20) {
@@ -77,9 +77,9 @@ class HomeViewModel : ViewModel() {
         HairstyleRepository.getFavoriteListData(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
             override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
                 if (response.isSuccessful) {
-                    _favoriteIdData.clear()
+                    PublicData.favoriteIdData.clear()
                     response.body()?.data?.list?.map {
-                        _favoriteIdData.add(it.id)
+                        PublicData.favoriteIdData.add(it.id)
                     }
                 }
             }
@@ -99,10 +99,6 @@ class HomeViewModel : ViewModel() {
 //        fetchHairstyles()
     }
 
-    //根据发型id获取是否收藏了发型
-    private fun getFavoriteStatus(styleId: Int): Boolean {
-        return _favoriteIdData.contains(styleId)
-    }
 
     fun loadMoreData(searchTag: String?) {
         viewModelScope.launch {
@@ -130,98 +126,10 @@ class HomeViewModel : ViewModel() {
                 avatarUrl = "", // If you have an avatar URL in the Hairstyle object, use it here
                 title = item.title,
                 description = item.desc,
-                isLiked = getFavoriteStatus(item.id),
+                isLiked = PublicData.getFavoriteStatus(item.id),
                 star_sum = item.star_sum
             )
         } as ArrayList<HairInfoItem>
-    }
-
-
-    private fun reverseDataFormat(from: List<HairInfoItem>): ArrayList<Hairstyle> {
-        return from.map { item ->
-            Hairstyle(
-                id = item.id.toInt(),
-                user_id = 0, // Placeholder since HairInfoItem doesn't have this
-                title = item.title,
-                desc = item.description,
-                tags = "", // Placeholder since HairInfoItem doesn't have this
-                star_sum = item.star_sum!!,
-                comment_count = 0, // Placeholder since HairInfoItem doesn't have this
-                favorite_count = 0, // Placeholder since HairInfoItem doesn't have this
-                created_at = "", // Placeholder since HairInfoItem doesn't have this
-                updated_at = "", // Placeholder since HairInfoItem doesn't have this
-                images = arrayListOf(
-                    Image(
-                        id = 0, // Placeholder since HairInfoItem doesn't have this
-                        user_id = 0, // Placeholder since HairInfoItem doesn't have this
-                        hairstyle_id = item.id.toInt(),
-                        url = item.imageUrl,
-                        privacy_url = "", // Placeholder since HairInfoItem doesn't have this
-                        created_at = "", // Placeholder since HairInfoItem doesn't have this
-                        updated_at = "" // Placeholder since HairInfoItem doesn't have this
-                    )
-                )
-            )
-        } as ArrayList<Hairstyle>
-    }
-
-
-
-    private fun loadTestData() {
-        val testData = arrayListOf(
-            HairInfoItem(
-                id = "1",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Elegant Bob Cut",
-                description = "This bob cut is sleek and elegant, perfect for a modern look.",
-                isLiked = false,
-                star_sum = 123
-            ),
-            HairInfoItem(
-                id = "2",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Curly Beauty",
-                description = "Embrace your curls with this beautiful and bouncy hairstyle.",
-                isLiked = false,
-                star_sum = 456
-            ),
-            HairInfoItem(
-                id = "3",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Straight and Chic",
-                description = "A straight hairstyle that is both chic and easy to maintain.",
-                isLiked = false,
-                star_sum = 789
-            )
-            ,
-            HairInfoItem(
-                id = "4",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Straight and Chic",
-                description = "A straight hairstyle that is both chic and easy to maintain.",
-                isLiked = false,
-                star_sum = 789
-            )
-            ,
-            HairInfoItem(
-                id = "5",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Straight and Chic",
-                description = "A straight hairstyle that is both chic and easy to maintain.",
-                isLiked = false,
-                star_sum = 789
-            )
-        )
-
-        val hairstyles = reverseDataFormat(testData)
-
-        val hairInfoList = dataFormat(hairstyles)
-        _hairInfoItems.value = hairInfoList
     }
 
     fun favorite(action: String, hairstyleIds: Int, result: (success: Boolean)-> Unit){
@@ -233,10 +141,10 @@ class HomeViewModel : ViewModel() {
                     }else
                     {
                         //更新本地维护的收藏列表
-                        if (action == "bind" && !_favoriteIdData.contains(hairstyleIds)) {
-                            _favoriteIdData.add(hairstyleIds)
-                        } else if (action == "unbind" && _favoriteIdData.contains(hairstyleIds)){
-                            _favoriteIdData.remove(hairstyleIds)
+                        if (action == "bind" && !PublicData.favoriteIdData.contains(hairstyleIds)) {
+                            PublicData.favoriteIdData.add(hairstyleIds)
+                        } else if (action == "unbind" && PublicData.favoriteIdData.contains(hairstyleIds)){
+                            PublicData.favoriteIdData.remove(hairstyleIds)
                         }
                         result.invoke(true)
                     }
