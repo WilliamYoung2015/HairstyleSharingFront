@@ -21,7 +21,9 @@ class HomeViewModel : ViewModel() {
     private val _hasMoreData = MutableLiveData<Boolean>(true)
     val hasMoreData: LiveData<Boolean> = _hasMoreData
 
-    fun fetchHairstyles(page: Int = 1, pageSize: Int = 20) {
+    private val _favoriteIdData = ArrayList<Int>()  //保存收藏的发型id
+
+    fun fetchHairstyles(page: Int = 1, pageSize: Int = 50) {
         println("_hairInfoItems start")
         HairstyleRepository.getHairStylePlaza(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
             override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
@@ -57,13 +59,37 @@ class HomeViewModel : ViewModel() {
         })
     }
 
+    //获取收藏的发型列表
+    private fun getFavoriteListData(page: Int = 1, pageSize: Int = 50) {
+        HairstyleRepository.getFavoriteListData(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
+            override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
+                if (response.isSuccessful) {
+                    _favoriteIdData.clear()
+                    response.body()?.data?.list?.map {
+                        _favoriteIdData.add(it.id)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
+                // 处理失败的情况
+            }
+        })
+    }
+
     init {
         initData()
 
     }
 
     fun initData(){
-        fetchHairstyles()
+        getFavoriteListData()
+//        fetchHairstyles()
+    }
+
+    //根据发型id获取是否收藏了发型
+    private fun getFavoriteStatus(styleId: Int): Boolean {
+        return _favoriteIdData.contains(styleId)
     }
 
 
@@ -142,7 +168,7 @@ class HomeViewModel : ViewModel() {
                 avatarUrl = "", // If you have an avatar URL in the Hairstyle object, use it here
                 title = item.title,
                 description = item.desc,
-                isLiked = false, // You need to determine this based on your logic
+                isLiked = getFavoriteStatus(item.id),
                 star_sum = item.star_sum
             )
         }
@@ -232,7 +258,7 @@ class HomeViewModel : ViewModel() {
 
         val hairstyles = reverseDataFormat(testData)
 
-        var hairInfoList = dataFormat(hairstyles)
+        val hairInfoList = dataFormat(hairstyles)
         _hairInfoItems.value = hairInfoList
     }
 
@@ -244,6 +270,12 @@ class HomeViewModel : ViewModel() {
                         result.invoke(false)
                     }else
                     {
+                        //更新本地维护的收藏列表
+                        if (action == "bind" && !_favoriteIdData.contains(hairstyleIds)) {
+                            _favoriteIdData.add(hairstyleIds)
+                        } else if (action == "unbind" && _favoriteIdData.contains(hairstyleIds)){
+                            _favoriteIdData.remove(hairstyleIds)
+                        }
                         result.invoke(true)
                     }
 

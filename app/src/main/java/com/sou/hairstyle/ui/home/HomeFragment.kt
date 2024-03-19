@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
             adapter.notifyDataSetChanged()
         }
 
-        homeViewModel.fetchHairstyles(1,20)
+        homeViewModel.fetchHairstyles(1,50)
 //        val textView: TextView = binding.textHome
 //        homeViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
@@ -161,7 +161,7 @@ class HomeFragment : Fragment() {
         if (!tag.isNullOrEmpty()) {
             homeViewModel.searchHairstyles(tag, 1, 20)
         } else {
-            homeViewModel.fetchHairstyles(1,20)
+            homeViewModel.fetchHairstyles(1,50)
         }
     }
 

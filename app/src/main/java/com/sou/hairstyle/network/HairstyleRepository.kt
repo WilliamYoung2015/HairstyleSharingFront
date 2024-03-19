@@ -40,6 +40,10 @@ object HairstyleRepository {
         return apiService.getHairStylePlazaData(page, pageSize)
     }
 
+    fun getFavoriteListData(page: Int, pageSize: Int): Call<HairInfoListResponse> {
+        return apiService.getFavoriteListData(page, pageSize)
+    }
+
     fun getHairStylePlazaWithTag(tag: String, page: Int, pageSize: Int): Call<HairInfoListResponse> {
         return apiService.getHairStylePlazaDataWithTag(tag, page, pageSize)
     }

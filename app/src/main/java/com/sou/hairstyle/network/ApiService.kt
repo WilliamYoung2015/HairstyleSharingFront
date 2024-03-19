@@ -42,6 +42,11 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("pagesize") pageSize: Int): Call<HairInfoListResponse>
 
+    @GET("favorite/list")
+    fun getFavoriteListData(
+        @Query("page") page: Int,
+        @Query("pagesize") pageSize: Int): Call<HairInfoListResponse>
+
     //tag 标签，多个以逗号(,)分割
     @GET("hairstyle/plaza")
     fun getHairStylePlazaDataWithTag(
