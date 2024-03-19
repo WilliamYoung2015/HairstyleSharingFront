@@ -20,6 +20,8 @@ class HairstyleInfoViewModel : ViewModel() {
     private val _hairInfo = MutableLiveData<Hairstyle>()
     val hairInfo: LiveData<Hairstyle> = _hairInfo
 
+    private var curPage = 1
+
     init {
 //        loadComments()
     }
@@ -44,6 +46,7 @@ class HairstyleInfoViewModel : ViewModel() {
 
     fun fetchComments(page: Int = 1, pageSize: Int = 20, hairstyleId: String) {
         println("_hairInfoItems start")
+        curPage = page
         HairstyleRepository.getCommentList(page, pageSize, hairstyleId).enqueue(object :
             Callback<CommentListResponse> {
             override fun onResponse(call: Call<CommentListResponse>, response: Response<CommentListResponse>) {
@@ -51,13 +54,21 @@ class HairstyleInfoViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _comments.postValue(response.body()?.data?.list?.let { dataFormat(it) })
                     println("_hairInfoItems:"+response.body())
+                } else {
+                    _comments.postValue(emptyList())
                 }
             }
 
             override fun onFailure(call: Call<CommentListResponse>, t: Throwable) {
                 // 处理失败的情况
+                _comments.postValue(emptyList())
             }
         })
+    }
+
+    fun loadMore(hairstyleId: String){
+        curPage++
+        fetchComments(curPage, 20, hairstyleId)
     }
 
     fun addComment(comment: String, hairstyleIds: String, result: (success: Boolean)-> Unit){

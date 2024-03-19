@@ -53,9 +53,16 @@ class HairstyleInfoActivity : AppCompatActivity() {
 
         viewModel.comments.observe(this) { comments ->
             adapter.submitList(comments)
+            if (comments.size > 10) {
+                binding.recyclerViewComments.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOAD_COMPLETE)
+            } else {
+                binding.recyclerViewComments.setLoadStatus(LoadMoreLinearLayoutRecyclerView.NO_MORE_DATA)
+                adapter.setShowFooter(true)
+            }
         }
         viewModel.getCurrentHairStyleInfo(hairStyleId)
         viewModel.fetchComments(1,20,hairStyleId)
+        adapter.setShowFooter(false)
 
         binding.imgHeart.setOnClickListener {
             hairStyleId.toIntOrNull()?.let { intId ->
@@ -97,6 +104,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
             adapter = this@HairstyleInfoActivity.adapter
             addLoadMoreListener {
                 setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOADING)
+                viewModel.loadMore(hairStyleId)
             }
         }
     }

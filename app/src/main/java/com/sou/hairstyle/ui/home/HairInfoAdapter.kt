@@ -34,16 +34,16 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
     class FooterViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == VIEW_TYPE_ITEM) {
+        return if (viewType == VIEW_TYPE_ITEM) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_hair_info, parent, false)
-//            return ItemViewHolder(view)
-            return ItemViewHolder(view) { position ->
+    //            return ItemViewHolder(view)
+            ItemViewHolder(view) { position ->
                 val item = items[position]
                 onItemClicked(item)
             }
         } else { // VIEW_TYPE_FOOTER
             val view = LayoutInflater.from(parent.context).inflate(R.layout.footer_view, parent, false)
-            return FooterViewHolder(view)
+            FooterViewHolder(view)
         }
     }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
