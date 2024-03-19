@@ -15,15 +15,17 @@ class HomeViewModel : ViewModel() {
 
     private val _hairInfoResponse = MutableLiveData<HairInfoListResponse>()
 
-    private val _hairInfoItems = MutableLiveData<List<HairInfoItem>>()
-    val hairInfoItems: LiveData<List<HairInfoItem>> = _hairInfoItems
+    private val _hairInfoItems = MutableLiveData<ArrayList<HairInfoItem>>()
+    val hairInfoItems: LiveData<ArrayList<HairInfoItem>> = _hairInfoItems
 
     private val _hasMoreData = MutableLiveData<Boolean>(true)
     val hasMoreData: LiveData<Boolean> = _hasMoreData
 
     private val _favoriteIdData = ArrayList<Int>()  //保存收藏的发型id
+    private var curPage = 1
 
-    fun fetchHairstyles(page: Int = 1, pageSize: Int = 50) {
+    fun fetchHairstyles(page: Int = 1, pageSize: Int = 20) {
+        this.curPage = page
         println("_hairInfoItems start")
         HairstyleRepository.getHairStylePlaza(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
             override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
@@ -31,12 +33,20 @@ class HomeViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _hairInfoResponse.postValue(response.body())
                     _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
+                    if (response.body()?.data?.list?.isNullOrEmpty() == true) {
+                        _hasMoreData.value = false // 没有更多数据可以加载
+                    } else {
+                        _hasMoreData.value = false
+                    }
                     println("_hairInfoItems:"+response.body())
+                } else {
+                    _hairInfoItems.postValue(ArrayList())
                 }
             }
 
             override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
                 // 处理失败的情况
+                _hairInfoItems.postValue(ArrayList())
             }
         })
     }
@@ -50,11 +60,14 @@ class HomeViewModel : ViewModel() {
                     _hairInfoResponse.postValue(response.body())
                     _hairInfoItems.postValue(response.body()?.data?.list?.let { dataFormat(it) })
                     println("_hairInfoItems:"+response.body())
+                } else {
+                    _hairInfoItems.postValue(ArrayList())
                 }
             }
 
             override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
                 // 处理失败的情况
+                _hairInfoItems.postValue(ArrayList())
             }
         })
     }
@@ -79,7 +92,6 @@ class HomeViewModel : ViewModel() {
 
     init {
         initData()
-
     }
 
     fun initData(){
@@ -92,75 +104,25 @@ class HomeViewModel : ViewModel() {
         return _favoriteIdData.contains(styleId)
     }
 
-
-    suspend fun fetchMoreData(): List<HairInfoItem> {
-        // 这里是模拟从数据源获取数据的逻辑
-        // 在实际应用中，这里可能是一个网络请求或数据库查询
-        return listOf(
-            HairInfoItem(
-                id = "6",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Elegant Bob Cut",
-                description = "This bob cut is sleek and elegant, perfect for a modern look.",
-                isLiked = false,
-                star_sum = 123
-            ),
-            HairInfoItem(
-                id = "7",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Curly Beauty",
-                description = "Embrace your curls with this beautiful and bouncy hairstyle.",
-                isLiked = false,
-                star_sum = 456
-            ),
-            HairInfoItem(
-                id = "8",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Straight and Chic",
-                description = "A straight hairstyle that is both chic and easy to maintain.",
-                isLiked = false,
-                star_sum = 789
-            )
-            ,
-            HairInfoItem(
-                id = "9",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Straight and Chic",
-                description = "A straight hairstyle that is both chic and easy to maintain.",
-                isLiked = false,
-                star_sum = 789
-            )
-            ,
-            HairInfoItem(
-                id = "10",
-                imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                avatarUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",
-                title = "Straight and Chic",
-                description = "A straight hairstyle that is both chic and easy to maintain.",
-                isLiked = false,
-                star_sum = 789
-            )
-        )
-    }
-
-    fun loadMoreData() {
+    fun loadMoreData(searchTag: String?) {
         viewModelScope.launch {
-            val moreData: List<HairInfoItem> = fetchMoreData() // 异步获取更多数据
-            if (moreData.isEmpty()) {
-                _hasMoreData.value = false // 没有更多数据可以加载
+            curPage++
+            if (searchTag.isNullOrEmpty()){
+                fetchHairstyles(curPage, 10)
             } else {
-                _hasMoreData.value = false
-//                val currentData: List<HairInfoItem> = _hairInfoItems.value ?: emptyList()
-//                _hairInfoItems.postValue(currentData + moreData) // 合并当前数据和新加载的数据
+                searchHairstyles(searchTag, curPage, 20)
             }
+
+//            val moreData: List<HairInfoItem> = fetchMoreData() // 异步获取更多数据
+//            if (moreData.isEmpty()) {
+//                _hasMoreData.value = false // 没有更多数据可以加载
+//            } else {
+//                _hasMoreData.value = false
+//            }
         }
     }
 
-    private fun dataFormat(from: List<Hairstyle>): List<HairInfoItem> {
+    private fun dataFormat(from: ArrayList<Hairstyle>): ArrayList<HairInfoItem> {
         return from.map { item ->
             HairInfoItem(
                 id = item.id.toString(),
@@ -171,11 +133,11 @@ class HomeViewModel : ViewModel() {
                 isLiked = getFavoriteStatus(item.id),
                 star_sum = item.star_sum
             )
-        }
+        } as ArrayList<HairInfoItem>
     }
 
 
-    private fun reverseDataFormat(from: List<HairInfoItem>): List<Hairstyle> {
+    private fun reverseDataFormat(from: List<HairInfoItem>): ArrayList<Hairstyle> {
         return from.map { item ->
             Hairstyle(
                 id = item.id.toInt(),
@@ -188,7 +150,7 @@ class HomeViewModel : ViewModel() {
                 favorite_count = 0, // Placeholder since HairInfoItem doesn't have this
                 created_at = "", // Placeholder since HairInfoItem doesn't have this
                 updated_at = "", // Placeholder since HairInfoItem doesn't have this
-                images = listOf(
+                images = arrayListOf(
                     Image(
                         id = 0, // Placeholder since HairInfoItem doesn't have this
                         user_id = 0, // Placeholder since HairInfoItem doesn't have this
@@ -200,13 +162,13 @@ class HomeViewModel : ViewModel() {
                     )
                 )
             )
-        }
+        } as ArrayList<Hairstyle>
     }
 
 
 
     private fun loadTestData() {
-        val testData = listOf(
+        val testData = arrayListOf(
             HairInfoItem(
                 id = "1",
                 imageUrl = "https://copyright.bdstatic.com/vcg/creative/cc9c744cf9f7c864889c563cbdeddce6.jpg@h_1280",

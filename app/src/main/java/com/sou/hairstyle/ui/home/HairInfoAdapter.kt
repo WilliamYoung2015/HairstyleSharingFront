@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.sou.hairstyle.R
 import com.sou.hairstyle.common.ImageLoader
 
-class HairInfoAdapter(var items: List<HairInfoItem>,
+class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
                       private val homeViewModel: HomeViewModel,
                       private var showFooter: Boolean,
                       private val onItemClicked: (HairInfoItem) -> Unit
@@ -107,6 +107,16 @@ class HairInfoAdapter(var items: List<HairInfoItem>,
         notifyDataSetChanged() // 通知数据变化，重新渲染列表
     }
 
+    fun clearData(){
+        items.clear()
+        setShowFooter(false)
+    }
+    fun addMoreData(moreData: List<HairInfoItem>){
+        val startNotify = items.size
+        items.addAll(moreData)
+        notifyItemRangeInserted(startNotify, moreData.size)
+        notifyItemRangeChanged(startNotify, moreData.size)
+    }
 
     override fun getItemCount(): Int {
         return if (showFooter) items.size + 1 else items.size

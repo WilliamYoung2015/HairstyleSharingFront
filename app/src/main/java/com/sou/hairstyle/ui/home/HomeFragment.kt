@@ -16,11 +16,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.sou.hairstyle.R
 import com.sou.hairstyle.databinding.FragmentHomeBinding
 import com.sou.hairstyle.ui.hairstyleInfo.HairstyleInfoActivity
+import com.sou.hairstyle.widget.LoadMoreLinearLayoutRecyclerView
 
 
 class HomeFragment : Fragment() {
@@ -32,6 +32,7 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private val tags = arrayListOf("超美", "初春", "春夏", "新风", "初秋", "秋冬")
+    private lateinit var hairInfoAdapter: HairInfoAdapter
 
     companion object {
         const val HAIRSTYLE_INFO_REQUEST_CODE = "HomeFragment_refresh_data"
@@ -88,7 +89,7 @@ class HomeFragment : Fragment() {
                 IntentFilter(HAIRSTYLE_INFO_REQUEST_CODE)
             )
         }
-        val adapter = HairInfoAdapter(emptyList(), homeViewModel, false){ item ->
+        hairInfoAdapter = HairInfoAdapter(arrayListOf(), homeViewModel, false){ item ->
             val gson = Gson()
             val itemJson = gson.toJson(item)
             println("click hair style ~~~~~~~~~~~~~~~~")
@@ -100,34 +101,41 @@ class HomeFragment : Fragment() {
         }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            this.adapter = adapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (!recyclerView.canScrollVertically(1) && dy > 0) { // Check if scrolling down
-                        homeViewModel.loadMoreData() // Trigger data load
-                    }
-                }
-            })
+            adapter = hairInfoAdapter
+            addLoadMoreListener {
+                binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOADING)
+                homeViewModel.loadMoreData(_binding?.searchBar?.text?.trim().toString())
+            }
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            hairInfoAdapter.clearData()
+            val tag = _binding?.searchBar?.text?.trim().toString()
+            if (tag.isNullOrEmpty()) {
+                homeViewModel.fetchHairstyles(1, 10)
+            } else {
+                homeViewModel.searchHairstyles(tag, 1, 20)
+            }
         }
 
         homeViewModel.hasMoreData.observe(viewLifecycleOwner) { hasMore ->
-            adapter.setShowFooter(!hasMore)
-            adapter.notifyDataSetChanged()
+            hairInfoAdapter.setShowFooter(!hasMore)
         }
 
         // Observe the LiveData containing the list of hair info items
         homeViewModel.hairInfoItems.observe(viewLifecycleOwner) { items ->
             // Update the adapter's data when the observed data changes
-            adapter.items = items
-            adapter.notifyDataSetChanged()
+//            adapter.items = items
+//            adapter.notifyDataSetChanged()
+            binding.swipeRefreshLayout.isRefreshing = false
+            if (items.isNotEmpty()) {
+                binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOAD_COMPLETE)
+                hairInfoAdapter.addMoreData(items)
+            } else {
+                binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.NO_MORE_DATA)
+            }
         }
-
-        homeViewModel.fetchHairstyles(1,50)
-//        val textView: TextView = binding.textHome
-//        homeViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
+        homeViewModel.fetchHairstyles(1,10)
         return root
     }
 
@@ -158,10 +166,11 @@ class HomeFragment : Fragment() {
     private fun search(){
         _binding?.searchBar?.let { hideSoftInputFromWindow(it) }
         val tag = _binding?.searchBar?.text?.trim().toString()
+        hairInfoAdapter.clearData()
         if (!tag.isNullOrEmpty()) {
             homeViewModel.searchHairstyles(tag, 1, 20)
         } else {
-            homeViewModel.fetchHairstyles(1,50)
+            homeViewModel.fetchHairstyles(1,10)
         }
     }
 

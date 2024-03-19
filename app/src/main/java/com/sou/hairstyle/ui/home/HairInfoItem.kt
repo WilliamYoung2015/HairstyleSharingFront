@@ -21,7 +21,7 @@ data class HairInfoListResponse(
 
 data class Data(
     val total: Int,
-    val list: List<Hairstyle>
+    val list: ArrayList<Hairstyle>
 )
 
 data class Hairstyle(
@@ -35,7 +35,7 @@ data class Hairstyle(
     val favorite_count: Int,
     val created_at: String,
     val updated_at: String,
-    val images: List<Image>
+    val images: ArrayList<Image>
 )
 
 data class Image(
