@@ -36,6 +36,8 @@ data class Hairstyle(
     val favorite_count: Int,
     val created_at: String,
     val updated_at: String,
+    val user_nickname: String,
+    val user_avatar: String,
     val images: ArrayList<Image>
 )
 
