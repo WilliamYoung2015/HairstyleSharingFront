@@ -123,7 +123,7 @@ class HomeViewModel : ViewModel() {
             HairInfoItem(
                 id = item.id.toString(),
                 imageUrl = item.images.firstOrNull()?.url ?: "",
-                avatarUrl = "", // If you have an avatar URL in the Hairstyle object, use it here
+                avatarUrl = item.user_avatar, // If you have an avatar URL in the Hairstyle object, use it here
                 title = item.title,
                 description = item.desc,
                 isLiked = PublicData.getFavoriteStatus(item.id),
