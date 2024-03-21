@@ -95,13 +95,13 @@ class HairStyleListActivity: AppCompatActivity() {
             homeViewModel.hairInfoFavorite.observe(this) { items ->
                 binding.swipeRefreshLayout.isRefreshing = false
                 if (items.isNotEmpty()) {
-                    binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOAD_COMPLETE)
                     hairInfoAdapter.addMoreData(items)
-                } else {
-                    binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.NO_MORE_DATA)
                 }
                 if (items.size < 10) {
                     hairInfoAdapter.setShowFooter(true)
+                    binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.NO_MORE_DATA)
+                } else {
+                    binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOAD_COMPLETE)
                 }
             }
             homeViewModel.getFavoriteListData(1, 20)
