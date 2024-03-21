@@ -19,6 +19,12 @@ class HomeViewModel : ViewModel() {
     private val _hairInfoItems = MutableLiveData<ArrayList<HairInfoItem>>()
     val hairInfoItems: LiveData<ArrayList<HairInfoItem>> = _hairInfoItems
 
+    private val _hairInfoFavorite = MutableLiveData<ArrayList<HairInfoItem>>()
+    val hairInfoFavorite: LiveData<ArrayList<HairInfoItem>> = _hairInfoFavorite
+
+    private val _hairInfoRelease = MutableLiveData<ArrayList<HairInfoItem>>()
+    val hairInfoRelease: LiveData<ArrayList<HairInfoItem>> = _hairInfoRelease
+
     private val _hasMoreData = MutableLiveData<Boolean>(true)
     val hasMoreData: LiveData<Boolean> = _hasMoreData
 
@@ -73,7 +79,7 @@ class HomeViewModel : ViewModel() {
     }
 
     //获取收藏的发型列表
-    private fun getFavoriteListData(page: Int = 1, pageSize: Int = 50) {
+    fun getFavoriteListData(page: Int = 1, pageSize: Int = 50) {
         HairstyleRepository.getFavoriteListData(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
             override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
                 if (response.isSuccessful) {
@@ -81,40 +87,56 @@ class HomeViewModel : ViewModel() {
                     response.body()?.data?.list?.map {
                         PublicData.favoriteIdData.add(it.id)
                     }
+                    _hairInfoFavorite.postValue(response.body()?.data?.list?.let { dataFormat(it) })
+                } else {
+                    _hairInfoFavorite.postValue(ArrayList())
                 }
             }
 
             override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
                 // 处理失败的情况
+                _hairInfoFavorite.postValue(ArrayList())
             }
         })
     }
 
-    init {
-        initData()
+    //获取发布的发型列表
+    fun getReleaseListData(page: Int = 1, pageSize: Int = 50) {
+        HairstyleRepository.getHairstyles(page, pageSize).enqueue(object : Callback<HairInfoListResponse> {
+            override fun onResponse(call: Call<HairInfoListResponse>, response: Response<HairInfoListResponse>) {
+                if (response.isSuccessful) {
+                    _hairInfoRelease.postValue(response.body()?.data?.list?.let { dataFormat(it) })
+                } else {
+                    _hairInfoRelease.postValue(ArrayList())
+                }
+            }
+
+            override fun onFailure(call: Call<HairInfoListResponse>, t: Throwable) {
+                // 处理失败的情况
+                _hairInfoRelease.postValue(ArrayList())
+            }
+        })
     }
 
-    fun initData(){
-        getFavoriteListData()
-//        fetchHairstyles()
-    }
 
-
-    fun loadMoreData(searchTag: String?) {
+    fun loadMoreData(searchTag: String?, listName: String = "") {
         viewModelScope.launch {
             curPage++
             if (searchTag.isNullOrEmpty()){
-                fetchHairstyles(curPage, 10)
+                when(listName) {
+                    "release" -> {
+                        getReleaseListData(curPage, 20)
+                    }
+                    "favorite" -> {
+                        getFavoriteListData(curPage, 20)
+                    }
+                    else -> {
+                        fetchHairstyles(curPage, 10)
+                    }
+                }
             } else {
                 searchHairstyles(searchTag, curPage, 20)
             }
-
-//            val moreData: List<HairInfoItem> = fetchMoreData() // 异步获取更多数据
-//            if (moreData.isEmpty()) {
-//                _hasMoreData.value = false // 没有更多数据可以加载
-//            } else {
-//                _hasMoreData.value = false
-//            }
         }
     }
 

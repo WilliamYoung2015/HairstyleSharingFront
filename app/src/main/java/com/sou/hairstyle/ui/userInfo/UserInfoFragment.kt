@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.sou.hairstyle.common.ImageLoader
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.databinding.ActivityUserinfoBinding
+import com.sou.hairstyle.ui.hairstylelist.HairStyleListActivity
 import com.sou.hairstyle.ui.login.LoginActivity
 import com.sou.hairstyle.ui.setting.SettingActivity
 
@@ -81,6 +82,18 @@ class UserInfoFragment : Fragment() {
         val user = sharedPreferencesManager.getUser()
         if (user != null) {
             userInfoViewModel.initUserInfo(user)
+        }
+
+        binding.infoFavorite.setOnClickListener {
+            val intent = Intent(activity, HairStyleListActivity::class.java)
+            intent.putExtra("from", "favorite")
+            startActivity(intent)
+        }
+
+        binding.infoRelease.setOnClickListener {
+            val intent = Intent(activity, HairStyleListActivity::class.java)
+            intent.putExtra("from", "release")
+            startActivity(intent)
         }
 
         // Logout button logic

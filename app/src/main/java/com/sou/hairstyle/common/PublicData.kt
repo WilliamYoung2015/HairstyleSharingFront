@@ -1,6 +1,7 @@
 package com.sou.hairstyle.common
 
 object PublicData {
+    const val HAIRSTYLE_INFO_REQUEST_CODE = "HomeFragment_refresh_data"
 
     val favoriteIdData = ArrayList<Int>()  //保存收藏的发型id
 

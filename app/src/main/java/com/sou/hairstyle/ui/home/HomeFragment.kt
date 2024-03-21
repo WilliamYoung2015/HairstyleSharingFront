@@ -36,12 +36,11 @@ class HomeFragment : Fragment() {
     private lateinit var hairInfoAdapter: HairInfoAdapter
 
     companion object {
-        const val HAIRSTYLE_INFO_REQUEST_CODE = "HomeFragment_refresh_data"
     }
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == HAIRSTYLE_INFO_REQUEST_CODE) {
+            if (intent.action == PublicData.HAIRSTYLE_INFO_REQUEST_CODE) {
                 // 这里执行刷新Fragment的操作
                 val styleId = intent.getStringExtra("styleId")
                 if (!styleId.isNullOrEmpty()) {
@@ -61,7 +60,6 @@ class HomeFragment : Fragment() {
     ): View {
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         _binding?.searchBar?.onFocusChangeListener =
@@ -92,7 +90,7 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
         context?.let {
             LocalBroadcastManager.getInstance(it).registerReceiver(receiver,
-                IntentFilter(HAIRSTYLE_INFO_REQUEST_CODE)
+                IntentFilter(PublicData.HAIRSTYLE_INFO_REQUEST_CODE)
             )
         }
         hairInfoAdapter = HairInfoAdapter(arrayListOf(), homeViewModel, false){ item ->
@@ -124,6 +122,13 @@ class HomeFragment : Fragment() {
             }
         }
 
+        homeViewModel.hairInfoFavorite.observe(viewLifecycleOwner) {
+            //2.再拉取发型列表，同步收藏状态
+            homeViewModel.fetchHairstyles(1,10)
+        }
+        //1.先获取收藏列表
+        homeViewModel.getFavoriteListData()
+
         homeViewModel.hasMoreData.observe(viewLifecycleOwner) { hasMore ->
             hairInfoAdapter.setShowFooter(!hasMore)
         }
@@ -141,7 +146,6 @@ class HomeFragment : Fragment() {
                 binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.NO_MORE_DATA)
             }
         }
-        homeViewModel.fetchHairstyles(1,10)
         return root
     }
 

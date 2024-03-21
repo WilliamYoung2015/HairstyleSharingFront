@@ -23,6 +23,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.PublicData
 import com.sou.hairstyle.imaging.IMGEditActivity
 import com.sou.hairstyle.imaging.IMGGalleryActivity
 import com.sou.hairstyle.imaging.core.util.IMGPermissionUtils
@@ -268,7 +269,7 @@ class AddHairStyleActivity: AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(HomeFragment.HAIRSTYLE_INFO_REQUEST_CODE))
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(PublicData.HAIRSTYLE_INFO_REQUEST_CODE))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

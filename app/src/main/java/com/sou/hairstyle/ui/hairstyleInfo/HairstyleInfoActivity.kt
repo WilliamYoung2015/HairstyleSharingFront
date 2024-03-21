@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.sou.hairstyle.R
 import com.sou.hairstyle.common.ImageLoader
+import com.sou.hairstyle.common.PublicData
 import com.sou.hairstyle.databinding.ActivityHairstyleInfoBinding
 import com.sou.hairstyle.ui.home.HairInfoItem
-import com.sou.hairstyle.ui.home.HomeFragment
 import com.sou.hairstyle.ui.home.HomeViewModel
 import com.sou.hairstyle.widget.LoadMoreLinearLayoutRecyclerView
 
@@ -40,7 +40,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
 
         hairStyleId = item.id
         ImageLoader.loadImage(this, item.imageUrl, binding.imgLarge)
-
+        setHeartIcon(item.isLiked)
 
 
         setupRecyclerView()
@@ -48,7 +48,6 @@ class HairstyleInfoActivity : AppCompatActivity() {
         viewModel.hairInfo.observe(this) { hairInfo ->
             binding.txtCommentCount.text = getString(R.string.comment_count_format, hairInfo.comment_count)
             binding.txtLikeCount.text = hairInfo.star_sum.toString()
-            setHeartIcon(hairInfo.isLiked)
         }
 
         viewModel.comments.observe(this) { comments ->
@@ -91,7 +90,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(HomeFragment.HAIRSTYLE_INFO_REQUEST_CODE)
+        val intent = Intent(PublicData.HAIRSTYLE_INFO_REQUEST_CODE)
         intent.putExtra("styleId", hairStyleId)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         finish()
