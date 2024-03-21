@@ -149,7 +149,7 @@ class HomeViewModel : ViewModel() {
                 title = item.title,
                 description = item.desc,
                 isLiked = PublicData.getFavoriteStatus(item.id),
-                star_sum = item.star_sum
+                favorite_count = item.favorite_count
             )
         } as ArrayList<HairInfoItem>
     }
@@ -160,8 +160,7 @@ class HomeViewModel : ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     if(response.body()?.code != 1){
                         result.invoke(false)
-                    }else
-                    {
+                    } else {
                         //更新本地维护的收藏列表
                         if (action == "bind" && !PublicData.favoriteIdData.contains(hairstyleIds)) {
                             PublicData.favoriteIdData.add(hairstyleIds)

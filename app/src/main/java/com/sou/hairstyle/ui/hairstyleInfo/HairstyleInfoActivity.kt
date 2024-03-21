@@ -47,7 +47,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
 
         viewModel.hairInfo.observe(this) { hairInfo ->
             binding.txtCommentCount.text = getString(R.string.comment_count_format, hairInfo.comment_count)
-            binding.txtLikeCount.text = hairInfo.star_sum.toString()
+            binding.txtLikeCount.text = hairInfo.favorite_count.toString()
         }
 
         viewModel.comments.observe(this) { comments ->
@@ -70,8 +70,8 @@ class HairstyleInfoActivity : AppCompatActivity() {
                         item.isLiked = !item.isLiked
                         setHeartIcon(item.isLiked)
                         // Update the like count accordingly
-                        item.star_sum += if (item.isLiked) 1 else -1
-                        binding.txtLikeCount.text = item.star_sum.toString()
+                        item.favorite_count += if (item.isLiked) 1 else -1
+                        binding.txtLikeCount.text = item.favorite_count.toString()
                     }
                 }
             }

@@ -71,7 +71,7 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
 
             holder.titleView.text = item.title
             holder.descriptionView.text = item.description
-            holder.likeCountView.text = item.star_sum.toString()
+            holder.likeCountView.text = item.favorite_count.toString()
             holder.likeButton.setImageResource(if (item.isLiked) R.drawable.stared else R.drawable.star)
 
 
@@ -86,7 +86,7 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
                         if (it){
                             // Update the isLiked status
                             item.isLiked = !item.isLiked
-                            item.star_sum += if (item.isLiked) 1 else -1
+                            item.favorite_count += if (item.isLiked) 1 else -1
                             notifyItemChanged(position)
                         }
                     }
