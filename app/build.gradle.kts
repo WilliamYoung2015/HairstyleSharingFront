@@ -16,6 +16,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file("../hairstyle.jks")    // 密钥库文件路径
+            storePassword = "hairstyle" // 密钥库密码
+            keyAlias = "key0" // 密钥别名
+            keyPassword = "hairstyle" // 密钥密码
+        }
+    }
 
     buildTypes {
         release {
@@ -24,6 +32,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
