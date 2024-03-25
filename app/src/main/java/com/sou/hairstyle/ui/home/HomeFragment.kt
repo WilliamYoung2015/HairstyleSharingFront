@@ -43,9 +43,10 @@ class HomeFragment : Fragment() {
             if (intent.action == PublicData.HAIRSTYLE_INFO_REQUEST_CODE) {
                 // 这里执行刷新Fragment的操作
                 val styleId = intent.getStringExtra("styleId")
+                val favoriteCount = intent.getIntExtra("favoriteCount", -1)
                 if (!styleId.isNullOrEmpty()) {
                     styleId.toIntOrNull()?.let {
-                        hairInfoAdapter.notifyById(styleId, PublicData.getFavoriteStatus(it))
+                        hairInfoAdapter.notifyById(styleId, PublicData.getFavoriteStatus(it), favoriteCount)
                     }
                 }
             }

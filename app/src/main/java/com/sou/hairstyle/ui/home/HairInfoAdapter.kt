@@ -118,10 +118,13 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
         notifyItemRangeChanged(startNotify, moreData.size)
     }
 
-    fun notifyById(styleId: String, isLike: Boolean){
+    fun notifyById(styleId: String, isLike: Boolean, favoriteCount: Int = -1){
         items.forEachIndexed { index, hairInfoItem ->
             if (hairInfoItem.id == styleId){
                 hairInfoItem.isLiked = isLike
+                if (favoriteCount >= 0) {
+                    hairInfoItem.favorite_count = favoriteCount
+                }
                 notifyItemChanged(index)
                 return@forEachIndexed
             }

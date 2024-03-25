@@ -27,6 +27,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
     private val viewModel: HairstyleInfoViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var adapter: HairstyleInfoAdapter
+    private var favoriteCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
         val item = Gson().fromJson(itemJson, HairInfoItem::class.java)
 
         hairStyleId = item.id
+        favoriteCount = item.favorite_count
         ImageLoader.loadImage(this, item.imageUrl, binding.imgLarge)
         setHeartIcon(item.isLiked)
 
@@ -46,8 +48,11 @@ class HairstyleInfoActivity : AppCompatActivity() {
         setupRecyclerView()
 
         viewModel.hairInfo.observe(this) { hairInfo ->
+            item.favorite_count = hairInfo.favorite_count
+            item.comment_count = hairInfo.comment_count
             binding.txtCommentCount.text = getString(R.string.comment_count_format, hairInfo.comment_count)
             binding.txtLikeCount.text = hairInfo.favorite_count.toString()
+            favoriteCount = hairInfo.favorite_count
         }
 
         viewModel.comments.observe(this) { comments ->
@@ -72,6 +77,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
                         // Update the like count accordingly
                         item.favorite_count += if (item.isLiked) 1 else -1
                         binding.txtLikeCount.text = item.favorite_count.toString()
+                        favoriteCount = item.favorite_count
                     }
                 }
             }
@@ -92,6 +98,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
         super.onBackPressed()
         val intent = Intent(PublicData.HAIRSTYLE_INFO_REQUEST_CODE)
         intent.putExtra("styleId", hairStyleId)
+        intent.putExtra("favoriteCount", favoriteCount)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         finish()
     }
