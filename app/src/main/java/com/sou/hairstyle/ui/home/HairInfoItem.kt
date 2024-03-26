@@ -3,6 +3,7 @@ package com.sou.hairstyle.ui.home
 data class HairInfoItem(
     val id: String,
     val imageUrl: String,
+    val userId: Int,
     val avatarUrl: String,
     val title: String,
     val description: String,

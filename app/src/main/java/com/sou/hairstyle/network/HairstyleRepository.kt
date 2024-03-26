@@ -165,4 +165,8 @@ object HairstyleRepository {
     fun favorite(action: String, hairstyleIds: Int): Call<CommonResponse> {
         return apiService.favorite(action, hairstyleIds)
     }
+
+    fun deleteHairStyle(hairstyleIds: Int): Call<CommonResponse> {
+        return apiService.deleteHairStyle(hairstyleIds)
+    }
 }

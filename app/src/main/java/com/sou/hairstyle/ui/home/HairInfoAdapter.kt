@@ -1,14 +1,16 @@
 package com.sou.hairstyle.ui.home
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.sou.hairstyle.R
 import com.sou.hairstyle.common.ImageLoader
+import com.sou.hairstyle.common.PublicData
+
 
 class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
                       private val homeViewModel: HomeViewModel,
@@ -19,9 +21,13 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
     private val VIEW_TYPE_ITEM = 0
     private val VIEW_TYPE_FOOTER = 1
 
-    class ItemViewHolder(view: View, clickAtPosition: (Int) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ItemViewHolder(view: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit) : RecyclerView.ViewHolder(view) {
         init {
             view.setOnClickListener { clickAtPosition(adapterPosition) }
+            view.setOnLongClickListener {
+                longClickAtPosition(adapterPosition)
+                return@setOnLongClickListener true
+            }
         }
         val imageView: ImageView = view.findViewById(R.id.item_image)
         val avatarView: ImageView = view.findViewById(R.id.item_avatar)
@@ -37,10 +43,32 @@ class HairInfoAdapter(var items: ArrayList<HairInfoItem>,
         return if (viewType == VIEW_TYPE_ITEM) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_hair_info, parent, false)
     //            return ItemViewHolder(view)
-            ItemViewHolder(view) { position ->
-                val item = items[position]
+            ItemViewHolder(view, {clickPos ->
+                val item = items[clickPos]
                 onItemClicked(item)
-            }
+
+            }, { position ->
+                val item = items[position]
+                if (item.userId != PublicData.loginUid) return@ItemViewHolder
+                val builder: AlertDialog.Builder = AlertDialog.Builder(view.context)
+                builder.setTitle("确认")
+                builder.setMessage("确认删除吗？")
+                builder.setPositiveButton("确认") { dialog, _ ->
+                    // 执行操作
+                    homeViewModel.deleteHairStyle(item.id.toInt()) {
+                        items.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, items.size - position)
+                    }
+                    dialog.dismiss()
+                }
+                builder.setNegativeButton("取消") { dialog, _ ->
+                    // 取消操作
+                    dialog.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            })
         } else { // VIEW_TYPE_FOOTER
             val view = LayoutInflater.from(parent.context).inflate(R.layout.footer_view, parent, false)
             FooterViewHolder(view)

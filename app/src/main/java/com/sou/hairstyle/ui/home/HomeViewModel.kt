@@ -145,6 +145,7 @@ class HomeViewModel : ViewModel() {
             HairInfoItem(
                 id = item.id.toString(),
                 imageUrl = item.images.firstOrNull()?.url ?: "",
+                userId = item.user_id,
                 avatarUrl = item.user_avatar, // If you have an avatar URL in the Hairstyle object, use it here
                 title = item.title,
                 description = item.desc,
@@ -178,6 +179,36 @@ class HomeViewModel : ViewModel() {
 
             override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                 // 网络请求失败
+                result.invoke(false)
+            }
+        })
+    }
+
+    //删除发型
+    fun deleteHairStyle(hairstyleIds: Int, result: (success: Boolean)-> Unit){
+        HairstyleRepository.deleteHairStyle(hairstyleIds).enqueue(object : Callback<CommonResponse> {
+            override fun onResponse(
+                call: Call<CommonResponse>,
+                response: Response<CommonResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    if(response.body()?.code != 1){
+                        result.invoke(false)
+                    } else {
+                        //更新本地维护的收藏列表
+                        if (PublicData.favoriteIdData.contains(hairstyleIds)){
+                            PublicData.favoriteIdData.remove(hairstyleIds)
+                        }
+                        result.invoke(true)
+                    }
+
+                } else {
+                    // 处理错误响应
+                    result.invoke(false)
+                }
+            }
+
+            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                 result.invoke(false)
             }
         })

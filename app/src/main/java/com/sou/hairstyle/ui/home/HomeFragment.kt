@@ -139,6 +139,7 @@ class HomeFragment : Fragment() {
             // Update the adapter's data when the observed data changes
 //            adapter.items = items
 //            adapter.notifyDataSetChanged()
+            if (items == null) return@observe
             binding.swipeRefreshLayout.isRefreshing = false
             if (items.isNotEmpty()) {
                 binding.recyclerView.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOAD_COMPLETE)

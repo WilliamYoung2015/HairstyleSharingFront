@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.sou.hairstyle.MainActivity
 import com.sou.hairstyle.R
+import com.sou.hairstyle.common.PublicData
 import com.sou.hairstyle.common.SharedPreferencesManager
 import com.sou.hairstyle.network.Resource
 import com.sou.hairstyle.ui.register.RegisterActivity
@@ -45,7 +46,10 @@ class LoginActivity : AppCompatActivity() {
                     // Handle successful login
                     Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
                     val sharedPreferencesManager = SharedPreferencesManager.getInstance(this)
-                    resource.data?.data?.user?.let { sharedPreferencesManager.saveUser(it) }
+                    resource.data?.data?.user?.let {
+                        sharedPreferencesManager.saveUser(it)
+                        PublicData.loginUid = it.id
+                    }
                     startActivity(Intent(this, MainActivity::class.java))
                     // Navigate to next screen
                 }

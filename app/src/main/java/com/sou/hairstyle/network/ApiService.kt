@@ -20,6 +20,7 @@ import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -114,4 +115,9 @@ interface ApiService {
     fun addHairStyle(
         @Part partList: List<MultipartBody.Part>,
     ): Call<AddHairStyleResponse>
+
+    @DELETE("hairstyle")
+    fun deleteHairStyle(
+        @Query("ids") hairstyleIds: Int
+    ): Call<CommonResponse>
 }
