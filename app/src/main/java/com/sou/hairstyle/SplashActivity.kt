@@ -60,6 +60,8 @@ class SplashActivity : AppCompatActivity() {
                 // 用户已登录，可以获取用户信息ß
                 val user = sharedPreferencesManager.getUser()
                 PublicData.loginUid = user?.id?: 0
+                PublicData.loginAvatar = user?.avatar?: ""
+                PublicData.loginNickname = user?.nickname?: ""
                 // 处理已登录的逻辑
                 // 用户已登录，跳转到MainActivity
                 startActivity(Intent(this, MainActivity::class.java))

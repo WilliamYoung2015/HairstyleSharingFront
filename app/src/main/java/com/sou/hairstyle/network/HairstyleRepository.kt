@@ -169,4 +169,8 @@ object HairstyleRepository {
     fun deleteHairStyle(hairstyleIds: Int): Call<CommonResponse> {
         return apiService.deleteHairStyle(hairstyleIds)
     }
+
+    fun deleteComment(commentIds: Int): Call<CommonResponse> {
+        return apiService.deleteComment(commentIds)
+    }
 }

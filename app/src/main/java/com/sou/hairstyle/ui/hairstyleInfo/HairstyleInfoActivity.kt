@@ -56,7 +56,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
         }
 
         viewModel.comments.observe(this) { comments ->
-            adapter.submitList(comments)
+            adapter.addMoreData(comments)
             if (comments.size > 10) {
                 binding.recyclerViewComments.setLoadStatus(LoadMoreLinearLayoutRecyclerView.LOAD_COMPLETE)
             } else {
@@ -104,7 +104,25 @@ class HairstyleInfoActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = HairstyleInfoAdapter()
+        adapter = HairstyleInfoAdapter{ pos, commentId ->
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setTitle("确认")
+            builder.setMessage("确认删除吗？")
+            builder.setPositiveButton("确认") { dialog, _ ->
+                // 执行操作
+                homeViewModel.deleteComment(commentId) {
+                    adapter.removeData(pos)
+                    viewModel.getCurrentHairStyleInfo(hairStyleId)
+                }
+                dialog.dismiss()
+            }
+            builder.setNegativeButton("取消") { dialog, _ ->
+                // 取消操作
+                dialog.dismiss()
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
         binding.recyclerViewComments.apply {
             layoutManager = LinearLayoutManager(this@HairstyleInfoActivity)
             adapter = this@HairstyleInfoActivity.adapter
@@ -125,7 +143,7 @@ class HairstyleInfoActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-    fun showCustomDialog() {
+    private fun showCustomDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_comment, null)
         val alertDialog = AlertDialog.Builder(this, R.style.FullScreenDialog)
             .setView(dialogView)
@@ -156,11 +174,15 @@ class HairstyleInfoActivity : AppCompatActivity() {
             // 处理确认按钮点击事件
             val editTextComment = dialogView.findViewById<EditText>(R.id.editTextComment)
             val comment = editTextComment.text.toString()
-            // TODO: 逻辑处理
-            viewModel.addComment(comment, hairStyleId) {
-                if (it) {
+            viewModel.addComment(comment, hairStyleId) { result, commentData ->
+                if (result) {
                     viewModel.getCurrentHairStyleInfo(hairStyleId)
-                    viewModel.fetchComments(1, 20, hairStyleId)
+//                    viewModel.fetchComments(1, 20, hairStyleId)
+                    if (commentData != null) {
+                        val addComments = arrayListOf<CommentItem>()
+                        addComments.add(commentData)
+                        adapter.addMoreData(addComments)
+                    }
                 }
 
 

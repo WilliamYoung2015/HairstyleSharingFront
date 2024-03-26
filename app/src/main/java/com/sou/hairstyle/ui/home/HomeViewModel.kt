@@ -213,4 +213,30 @@ class HomeViewModel : ViewModel() {
             }
         })
     }
+
+    //删除评论
+    fun deleteComment(commentIds: Int, result: (success: Boolean)-> Unit){
+        HairstyleRepository.deleteComment(commentIds).enqueue(object : Callback<CommonResponse> {
+            override fun onResponse(
+                call: Call<CommonResponse>,
+                response: Response<CommonResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    if(response.body()?.code != 1){
+                        result.invoke(false)
+                    } else {
+                        result.invoke(true)
+                    }
+
+                } else {
+                    // 处理错误响应
+                    result.invoke(false)
+                }
+            }
+
+            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                result.invoke(false)
+            }
+        })
+    }
 }

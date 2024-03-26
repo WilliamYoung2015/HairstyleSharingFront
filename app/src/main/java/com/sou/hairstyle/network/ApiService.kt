@@ -120,4 +120,9 @@ interface ApiService {
     fun deleteHairStyle(
         @Query("ids") hairstyleIds: Int
     ): Call<CommonResponse>
+
+    @DELETE("comment")
+    fun deleteComment(
+        @Query("ids") commentIds: Int
+    ): Call<CommonResponse>
 }

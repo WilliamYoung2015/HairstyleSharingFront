@@ -49,6 +49,8 @@ class LoginActivity : AppCompatActivity() {
                     resource.data?.data?.user?.let {
                         sharedPreferencesManager.saveUser(it)
                         PublicData.loginUid = it.id
+                        PublicData.loginAvatar = it.avatar?: ""
+                        PublicData.loginNickname = it.nickname?: ""
                     }
                     startActivity(Intent(this, MainActivity::class.java))
                     // Navigate to next screen

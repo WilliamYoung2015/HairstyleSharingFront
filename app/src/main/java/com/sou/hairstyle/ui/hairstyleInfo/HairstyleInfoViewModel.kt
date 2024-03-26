@@ -3,7 +3,9 @@ package com.sou.hairstyle.ui.hairstyleInfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sou.hairstyle.common.PublicData
 import com.sou.hairstyle.network.HairstyleRepository
+import com.sou.hairstyle.network.Response.CommentData
 import com.sou.hairstyle.network.Response.CommentListDetial
 import com.sou.hairstyle.network.Response.CommentListResponse
 import com.sou.hairstyle.network.Response.CommentResponse
@@ -71,49 +73,49 @@ class HairstyleInfoViewModel : ViewModel() {
         fetchComments(curPage, 20, hairstyleId)
     }
 
-    fun addComment(comment: String, hairstyleIds: String, result: (success: Boolean)-> Unit){
+    fun addComment(comment: String, hairstyleIds: String, result: (success: Boolean, comment: CommentItem?)-> Unit){
         HairstyleRepository.addComment(comment, hairstyleIds).enqueue(object : Callback<CommentResponse> {
             override fun onResponse(call: Call<CommentResponse>, response: Response<CommentResponse>) {
                 if (response.isSuccessful && response.body() != null) {
                     if(response.body()?.code != 1){
-                        result.invoke(false)
+                        result.invoke(false, null)
                     }else
                     {
-                        result.invoke(true)
+                        result.invoke(true, dataFormat(response.body()?.data))
                     }
 
                 } else {
                     // 处理错误响应
-                    result.invoke(false)
+                    result.invoke(false, null)
                 }
             }
 
             override fun onFailure(call: Call<CommentResponse>, t: Throwable) {
                 // 网络请求失败
-                result.invoke(false)
+                result.invoke(false, null)
             }
         })
     }
 
-    private fun loadComments() {
-        // Load comments (this is just a placeholder for actual data loading logic)
-        _comments.value = listOf(
-            CommentItem("User1", "This is a great hairstyle!", "https://example.com/image1.png"),
-            CommentItem("User2", "Looks awesome!", "https://example.com/image2.png"),
-            CommentItem("User1", "This is a great hairstyle!", "https://example.com/image1.png"),
-            CommentItem("User2", "Looks awesome!", "https://example.com/image2.png"),
-            CommentItem("User1", "This is a great hairstyle!", "https://example.com/image1.png"),
-            CommentItem("User2", "Looks awesome!", "https://example.com/image2.png"),
-            CommentItem("User1", "This is a great hairstyle!", "https://example.com/image1.png"),
-            CommentItem("User2", "Looks awesome!", "https://example.com/image2.png"),
-            CommentItem("User1", "This is a great hairstyle!", "https://example.com/image1.png"),
-            CommentItem("User2", "Looks awesome!", "https://example.com/image2.png"),
-        )
+    private fun dataFormat(from: CommentData?): CommentItem? {
+        return if (from == null) {
+            null
+        } else {
+            CommentItem(
+                id = from.id,
+                userId = from.user_id,
+                username = PublicData.loginNickname,
+                userProfileImageUrl = PublicData.loginAvatar, // If you have an avatar URL in the Hairstyle object, use it here
+                content = from.comment,
+            )
+        }
     }
 
     private fun dataFormat(from: List<CommentListDetial>): List<CommentItem> {
         return from.map { item ->
             CommentItem(
+                id = item.id,
+                userId = item.user_id,
                 username = item.user_nickname,
                 userProfileImageUrl = item.user_avatar, // If you have an avatar URL in the Hairstyle object, use it here
                 content = item.comment,
